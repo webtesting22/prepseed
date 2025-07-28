@@ -79,24 +79,24 @@
 }
 
 .AllClientsContainer .logo-container {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f9fa;
+    /* background: #f8f9fa; */
     border-radius: 8px;
     position: relative;
     transition: all 0.3s ease;
 }
 
 .AllClientsContainer .client-card:hover .logo-container {
-    background: #f0f0f0;
+    /* background: #f0f0f0; */
     transform: scale(1.05);
 }
 
 .AllClientsContainer .logo-container img {
-    max-width: 100%;
+    max-width: 130px;
     max-height: 100%;
     object-fit: contain;
     /* filter: grayscale(100%); */

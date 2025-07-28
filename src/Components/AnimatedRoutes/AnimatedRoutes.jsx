@@ -8,6 +8,7 @@ import AllClients from '../OthersComponents/Clients/AllClients/AllClients';
 import AllModules from '../OthersComponents/Modules/AllModules/AllModules';
 import IndusriesWiseModules from '../OthersComponents/Modules/IndusriesWiseModules/IndusriesWiseModules';
 import SingleModule from '../OthersComponents/Modules/SingleModule/SingleModule';
+import Policies from '../OthersComponents/Policies/Policies';
 import NotFound from '../NotFound/NotFound';
 
 const AnimatedRoutes = () => {
@@ -49,6 +50,14 @@ const AnimatedRoutes = () => {
                     } 
                 />
                 <Route 
+                    path="/services" 
+                    element={
+                        <PageTransition>
+                            <AllModules />
+                        </PageTransition>
+                    } 
+                />
+                <Route 
                     path="/industry/:industryName" 
                     element={
                         <PageTransition>
@@ -61,6 +70,14 @@ const AnimatedRoutes = () => {
                     element={
                         <PageTransition>
                             <SingleModule />
+                        </PageTransition>
+                    } 
+                />
+                <Route 
+                    path="/policies/:policyType" 
+                    element={
+                        <PageTransition>
+                            <Policies />
                         </PageTransition>
                     } 
                 />

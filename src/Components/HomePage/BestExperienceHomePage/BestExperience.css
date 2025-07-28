@@ -6,7 +6,8 @@
     background-color: var(--bodyColor);
     padding: 20px;
     border-radius: 10px;
-    min-height: 500px;
+    /* height: 100%; */
+    /* min-height: 500px; */
     /* box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px; */
 }
 

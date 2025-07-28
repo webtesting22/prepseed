@@ -1,0 +1,316 @@
+.single-module-section {
+    background: white;
+    min-height: 100vh;
+    padding: 60px 0;
+}
+
+.single-module-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.single-module-section .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: #666;
+}
+
+.single-module-section .breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.single-module-section .breadcrumb a:hover {
+    color: #0056b3;
+}
+
+.single-module-section .breadcrumb span {
+    color: #ccc;
+}
+
+.single-module-section .module-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    padding: 48px;
+    margin-bottom: 60px;
+    border: 1px solid #e0e0e0;
+}
+
+.single-module-section .module-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 24px 0;
+    line-height: 1.2;
+}
+
+.single-module-section .module-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #666;
+    margin: 0 0 32px 0;
+    max-width: 800px;
+}
+
+.single-module-section .module-meta {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.single-module-section .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.single-module-section .meta-item .label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.single-module-section .meta-item .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #007bff;
+    background: #e3f2fd;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.single-module-section .module-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.single-module-section .features-section {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.single-module-section .features-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 32px 0;
+}
+
+.single-module-section .features-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.single-module-section .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.single-module-section .feature-item:hover {
+    background: #e3f2fd;
+    border-color: #007bff;
+    transform: translateX(4px);
+}
+
+.single-module-section .feature-item svg {
+    color: #007bff;
+    flex-shrink: 0;
+}
+
+.single-module-section .feature-item span {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.single-module-section .cta-section {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-radius: 16px;
+    padding: 40px;
+    color: white;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.single-module-section .cta-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: white;
+}
+
+.single-module-section .cta-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.single-module-section .cta-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.single-module-section .primary-btn {
+    background: white;
+    color: #007bff;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.single-module-section .primary-btn:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.single-module-section .secondary-btn {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.single-module-section .secondary-btn:hover {
+    background: white;
+    color: #007bff;
+    transform: translateY(-2px);
+}
+
+.single-module-section .module-not-found {
+    text-align: center;
+    padding: 100px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.single-module-section .module-not-found h1 {
+    font-size: 32px;
+    color: #000;
+    margin-bottom: 24px;
+}
+
+.single-module-section .back-link {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.single-module-section .back-link:hover {
+    background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .single-module-section .module-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .single-module-section .module-title {
+        font-size: 36px;
+    }
+    
+    .single-module-section .features-section h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .single-module-section {
+        padding: 40px 0;
+    }
+    
+    .single-module-section .module-hero {
+        padding: 32px;
+        margin-bottom: 40px;
+    }
+    
+    .single-module-section .module-title {
+        font-size: 28px;
+    }
+    
+    .single-module-section .module-description {
+        font-size: 16px;
+    }
+    
+    .single-module-section .module-meta {
+        gap: 20px;
+    }
+    
+    .single-module-section .features-section {
+        padding: 24px;
+    }
+    
+    .single-module-section .features-section h2 {
+        font-size: 24px;
+    }
+    
+    .single-module-section .cta-section {
+        padding: 32px;
+    }
+    
+    .single-module-section .cta-section h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .single-module-section .module-hero {
+        padding: 24px;
+    }
+    
+    .single-module-section .module-title {
+        font-size: 24px;
+    }
+    
+    .single-module-section .module-meta {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .single-module-section .feature-item {
+        padding: 16px;
+    }
+    
+    .single-module-section .feature-item span {
+        font-size: 14px;
+    }
+    
+    .single-module-section .cta-section {
+        padding: 24px;
+    }
+}

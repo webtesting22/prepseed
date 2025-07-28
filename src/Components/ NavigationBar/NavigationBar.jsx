@@ -15,11 +15,11 @@ const NavigationBar = () => {
         <nav className="navigation-bar">
             <div className="nav-container">
                 {/* Logo Section */}
-               <Link to="/">
-               <div className="nav-logo">
-                    <img src="/Images/PrepseedLogo.svg" alt="Prepseed" className="logo-image" />
-                </div>
-               </Link>
+                <Link to="/">
+                    <div className="nav-logo">
+                        <img src="/Images/PrepseedLogo.svg" alt="Prepseed" className="logo-image" />
+                    </div>
+                </Link>
 
                 {/* Desktop Navigation Links */}
                 <div className="nav-links desktop-nav">
@@ -44,8 +44,9 @@ const NavigationBar = () => {
 
                 {/* Action Buttons */}
                 <div className="nav-actions">
+                    <Link to="tel:+919913382221" className="nav-btn primary-btn">Contact Prepseed</Link>
                     {/* <button className="nav-btn secondary-btn">View Services</button> */}
-                    <button className="nav-btn primary-btn">Contact Prepseed</button>
+                    {/* <Link to="mailto:vivek@prepseed.com" className="nav-btn primary-btn">vivek@prepseed.com</Link> */}
                 </div>
             </div>
 
@@ -59,8 +60,9 @@ const NavigationBar = () => {
                     ))}
                 </div>
                 <div className="mobile-menu-actions">
-                    <button className="nav-btn secondary-btn">View Services</button>
-                    <button className="nav-btn primary-btn">Contact Prepseed</button>
+                    <Link to="tel:+919913382221" className="nav-btn primary-btn">Contact Prepseed</Link>
+                    {/* <button className="nav-btn secondary-btn">View Services</button> */}
+                    {/* <Link to="mailto:vivek@prepseed.com" className="nav-btn primary-btn">vivek@prepseed.com</Link> */}
                 </div>
             </div>
         </nav>

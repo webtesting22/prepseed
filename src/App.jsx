@@ -7,12 +7,32 @@ import Loader from './Components/Loader/Loader'
 import ProvideApp from './Components/OthersComponents/ProvideApp/ProvideApp'
 import NavigationBar from './Components/ NavigationBar/NavigationBar'
 import AnimatedRoutes from './Components/AnimatedRoutes/AnimatedRoutes'
-import  Flowbtn from './Components/FlowBtn/Flowbtn'
+import Flowbtn from './Components/FlowBtn/Flowbtn'
 
 function AppContent() {
   const location = useLocation();
-  const validRoutes = ['/', '/about', '/our-clients', '/modules'];
-  const isNotFoundPage = !validRoutes.includes(location.pathname);
+
+  // Check if the current path matches any of our valid route patterns
+  const isValidRoute = () => {
+    const path = location.pathname;
+
+    // Exact matches
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services'];
+    if (exactRoutes.includes(path)) return true;
+
+    // Policy routes
+    if (path.startsWith('/policies/')) return true;
+
+    // Industry routes
+    if (path.startsWith('/industry/')) return true;
+
+    // Module routes
+    if (path.startsWith('/module/')) return true;
+
+    return false;
+  };
+
+  const isNotFoundPage = !isValidRoute();
 
   return (
     <>

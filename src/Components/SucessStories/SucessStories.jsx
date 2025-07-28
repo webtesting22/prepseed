@@ -38,6 +38,7 @@ const SucessStories = () => {
                                                 autoplay={{
                                                     delay: 2500,
                                                     disableOnInteraction: false,
+                                                    pauseOnMouseEnter: true,
                                                 }}
                                                 modules={[FreeMode, Pagination, Autoplay]}
                                                 className="mySwiper"
@@ -47,12 +48,15 @@ const SucessStories = () => {
                                                         <div className="SucessStoriesCard flex-column-widthGap">
                                                             {/* <h3>{item.title}</h3> */}
                                                             <div>
-                                                                <h4 style={{color:"rgb(62 62 62)",textAlign:"center"}}>"{item.description}"</h4>
+                                                                <p style={{ color: "rgb(62 62 62)", textAlign: "center" }}>"{item.description}"</p>
                                                             </div>
                                                             <br />
-                                                            <div>
+                                                            <div className="TestimonialCard">
+                                                                <div className="TestimonialCardImage">
+                                                                    <img src={item.image} alt="" />
+                                                                </div>
                                                                 <h4 className="textCenter">{item.title}</h4>
-                                                                <p className="paraWeight textCenter" style={{ marginTop: "0px",textAlign:"center" }}>{item.postition}</p>
+                                                                <p className="paraWeight textCenter" style={{ marginTop: "0px", textAlign: "center" }}>{item.postition}</p>
                                                             </div>
                                                         </div>
                                                     </SwiperSlide>

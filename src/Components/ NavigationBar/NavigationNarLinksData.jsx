@@ -4,6 +4,10 @@ const NavigationNarLinksData = [
         link: "/"
     },
     {
+        name: "Services",
+        link: "/services"
+    },
+    {
         name: "About Us",
         link: "/about"
     },
