@@ -1,0 +1,41 @@
+.heroHomeContainer {
+    min-height: 700px;
+    max-height: 900px;
+    position: relative;
+    /* background-color: red; */
+}
+
+.heroBackLines{
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.heroHomeContainer .ant-row {
+    min-height: 700px;
+    max-height: 900px;
+}
+
+.heroHomeText{
+    height: 100%;
+    display: flex
+;
+    /* align-items: center; */
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.heroHomeImage img{
+    width: 100%;
+    /* box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px; */
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .heroHomeImage img{
+        width: 95%;
+    }
+}

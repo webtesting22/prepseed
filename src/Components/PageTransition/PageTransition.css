@@ -1,0 +1,21 @@
+.page-transition {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ensure smooth transitions */
+.page-transition * {
+    will-change: transform, opacity;
+}
+
+/* Prevent horizontal scroll during transitions */
+body {
+    overflow-x: hidden;
+}
+
+/* Smooth scrolling for better transitions */
+html {
+    scroll-behavior: smooth;
+} 

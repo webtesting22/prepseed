@@ -1,0 +1,8 @@
+.SucessStoriesCard{
+    background-color: var(--bodyColor);
+    padding: 20px;
+    border-radius: 10px;
+}
+.SucessStories{
+    background-color: white;
+}

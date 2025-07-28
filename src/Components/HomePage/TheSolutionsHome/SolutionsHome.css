@@ -1,0 +1,84 @@
+.TheSolutionsHome {
+    background-color: white;
+}
+
+.HierarchyContainer {
+    min-height: 500px;
+    background-color: white;
+    width: 100%;
+    border: 1px solid #f8f8f8;
+    border-radius: 10px;
+    height: 100%;
+    position: relative;
+}
+
+.HierarchyContainerCenterCircle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-color: white;
+    z-index: 5;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 10px; */
+    /* border: 2px solid white; */
+}
+
+.HierarchyContainerCenterCircle::before {
+    height: 90%;
+    content: "";
+    width: 90%;
+    position: absolute;
+    border-radius: 50%;
+    background-color: var(--bodyColor);
+}
+
+.HierarchyItems {
+    height: 100%;
+}
+
+.HierarchyItems .ant-row {
+    height: 100%;
+}
+
+.HierarchyItems>.ant-row .ant-col {
+    padding: 10px;
+}
+
+.HierarchyItem {
+    height: 100%;
+    background-color: var(--bodyColor);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+    border-radius: 10px;
+}
+
+.HierarchyContainerCenterCircle img {
+    position: relative;
+    z-index: 1;
+    width: 50%;
+    filter: drop-shadow(0 0 0.90rem #b6b6b6 );
+}
+
+.PaddingAdjustRight{
+padding-right: 50px;
+}
+
+.TheSolutionsHome .PaddingAdjustRight{
+    justify-content: center;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+   .PaddingAdjustRight{
+    padding-right: 0px;
+   }
+}

@@ -1,0 +1,72 @@
+.FlexRowTag {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.FlexRowTag span:first-child {
+  background-color: var(--brandColor);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+
+.FlexRowTag span:last-child {
+  color: var(--brandColor);
+  font-size: 16px;
+}
+
+.FlexRowTag span:last-child::before {
+  content: "•";
+  margin-right: 10px;
+}
+
+.CommonBtnAnimated {
+  background-color: black;
+  color: white;
+  padding: 13px 25px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  /* font-size: 16px; */
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+}
+
+.maxWidth600 {
+  max-width: 600px;
+  margin: 0px auto;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.flex-column-widthGap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.paddingRight{
+  padding-right: 50px;
+}
+
+.paddingLeft{
+  padding-left: 50px;
+}
+
+.white{
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .paddingRight{
+    padding-right: 0px;
+  }
+}
+
+.BackgroundColor .clients-section{
+  background-color: var(--bodyColor);
+}

@@ -1,0 +1,42 @@
+.BluryLineBottom {
+    min-height: 30px;
+    max-height: 30px;
+    width: 100%;
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Smooth Top Edge */
+.BluryLineBottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 15px;
+    /* background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%); */
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Smooth Bottom Edge */
+.BluryLineBottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+

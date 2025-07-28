@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  --brandColor: #003962;
+  --bodyColor: #f8f8f8;
+  background-color: var(--bodyColor);
+}
+
+p {
+  margin-bottom: 0px;
+  font-weight: 400;
+  color: #202020;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  line-height: 150%;
+}
+
+p .color {
+  color: #202020;
+  font-weight: 600;
+
+}
+a{
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0px;
+  font-family: "Inter", sans-serif;
+}
+
+h1 {
+  color: var(--brandColor);
+  letter-spacing: -1.32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 57px;
+  font-weight: 600;
+  line-height: 110%;
+}
+
+h2 {
+  color: var(--brandColor);
+  letter-spacing: -1.32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 110%;
+}
+
+h3 {
+  color: black;
+  letter-spacing: -1.32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 110%;
+}
+
+h4 {
+  color: black;
+  letter-spacing: -1.32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 110%;
+}
+
+.paraWeight {
+  font-weight: 600;
+}
+
+h2 span {
+  position: relative;
+  color: black;
+}
+
+h2 span::after {
+  content: "";
+  background-image: url("/Images/CommonHeadingBottom.svg");
+  min-height: 20px;
+  position: absolute;
+  width: 100%;
+  background-repeat: no-repeat;
+  /* background-size: cover; */
+  left: 0px;
+  bottom: -11px;
+  rotate: -2deg;
+
+}
+
+li,
+span,
+a,
+button {
+  font-family: "Inter", sans-serif;
+}
+
+.MainContainer {
+  width: 100%;
+  margin: 0px auto;
+}
+
+.Container {
+  max-width: 1200px;
+  margin: 0px auto;
+}
+
+.paddingTop {
+  padding-top: 100px;
+}
+
+.paddingBottom {
+  padding-bottom: 100px;
+}
+
+.paddingTop50 {
+  padding-top: 50px;
+}
+
+.paddingBottom50 {
+  padding-bottom: 50px;
+}
+
+.marginTop50 {
+  margin-top: 50px;
+}
+
+.marginBottom50 {
+  margin-bottom: 50px;
+}
+
+.marginBottom20 {
+  margin-bottom: 20px;
+}
+
+.marginTop20 {
+  margin-top: 20px;
+}
+
+
+
+@media (max-width: 768px) {
+  .MainContainer {
+    padding: 40px 10px;
+  }
+  h1 {
+    font-size: 40px;
+  }
+}
