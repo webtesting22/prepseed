@@ -56,7 +56,7 @@ const SingleModule = () => {
                         <div className="module-info">
                             <h1 className="module-title">{moduleData.title}</h1>
                             <p className="module-description">{moduleData.description}</p>
-                            <div className="module-meta">
+                            {/* <div className="module-meta">
                                 <div className="meta-item">
                                     <span className="label">Price:</span>
                                     <span className="value">{moduleData.price}</span>
@@ -65,7 +65,7 @@ const SingleModule = () => {
                                     <span className="label">Duration:</span>
                                     <span className="value">{moduleData.duration}</span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     

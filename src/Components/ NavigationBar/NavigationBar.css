@@ -181,24 +181,24 @@
     .nav-links {
         display: none;
     }
-    
+
     .nav-actions {
         display: none;
     }
-    
+
     .mobile-menu-btn {
         display: flex;
     }
-    
+
     .mobile-menu {
         display: block;
     }
-    
+
     .nav-container {
         padding: 0 16px;
         height: 60px;
     }
-    
+
     .logo-image {
         height: 32px;
     }
@@ -209,19 +209,19 @@
         padding: 0 12px;
         height: 68px;
     }
-    
+
     .logo-image {
         height: 60px;
     }
-    
+
     .mobile-menu-links {
         padding: 16px;
     }
-    
+
     .mobile-menu-actions {
         padding: 16px;
     }
-    
+
     .nav-btn {
         padding: 10px 14px;
         font-size: 13px;
