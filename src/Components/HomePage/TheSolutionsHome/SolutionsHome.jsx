@@ -5,7 +5,6 @@ import TheSolutionsData from "./TheSolutionsData";
 import TheCenterSolutionsGraphic from "/Images/TheSolutionsCenterCircle.svg"
 const SolutionsHome = () => {
 
-
     return (
         <>
             <div className="MainContainer TheSolutionsHome paddingTop50 paddingBottom50">

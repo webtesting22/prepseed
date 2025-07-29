@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./HeroHome.css";
 import { Row, Col } from "antd"
-// import HeroBackLines from "/Images/HeroBackLines.svg"
+import HeroBackLines from "/Images/HeroBackLines.svg"
 // import HeroHomePortalImage from "/Images/HeroHomePortalImage.webp"
 import { Link } from "react-router-dom";
 const HeroHome = () => {
@@ -16,7 +16,7 @@ const HeroHome = () => {
                         <Row>
                             <Col lg={12}>
                                 <div className="heroHomeText paddingRight">
-                                    <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/HeroBackLines.svg" alt="" className="heroBackLines" />
+                                    <img src={HeroBackLines} alt="" className="heroBackLines" />
                                     <div className="FlexRowTag marginBottom20">
                                         <span>Powerful AI platform</span>
                                         <span>Prepseed 2.0</span>
