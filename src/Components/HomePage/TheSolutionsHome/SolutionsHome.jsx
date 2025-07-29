@@ -2,6 +2,7 @@ import React from "react";
 import "./SolutionsHome.css";
 import { Row, Col } from "antd";
 import TheSolutionsData from "./TheSolutionsData";
+import { Link } from "react-router-dom";
 // import TheCenterSolutionsGraphic from "../../../../public/Images/TheSolutionsCenterCircle.svg"
 const SolutionsHome = () => {
 
@@ -14,10 +15,10 @@ const SolutionsHome = () => {
                             <div className="flex-column-widthGap PaddingAdjustRight">
                                 <h2>Proven <span>Solutions</span>, Real Impact, Unmatched Growth</h2>
                                 <p className="paraWeight">Driving global growth with 250K+ users and $1.2M in trusted investor backing.</p>
-                                <div>
-                                     <button className="all-industries-btn">
+                                <div className="marginTop20">
+                                    <Link to="/services"><button className="all-industries-btn">
                                         <span>Explore Solutions</span>
-                                    </button>
+                                    </button></Link>
                                 </div>
                             </div>
                         </Col>
