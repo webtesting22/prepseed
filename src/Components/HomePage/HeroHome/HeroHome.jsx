@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./HeroHome.css";
 import { Row, Col } from "antd"
-import HeroBackLines from "../../../../public/Images/HeroBackLines.svg"
+import HeroBackLines from "/images/download.svg"
 // import HeroHomePortalImage from "/Images/HeroHomePortalImage.webp"
 import { Link } from "react-router-dom";
 const HeroHome = () => {

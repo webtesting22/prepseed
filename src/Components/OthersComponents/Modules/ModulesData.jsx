@@ -3,7 +3,7 @@ const modulesData = {
     "Pre-schools": {
         title: "Pre-schools",
         description: "Comprehensive software solutions designed specifically for pre-school management and early childhood education.",
-        image: "/Images/Icons/PreSchool.svg",
+        image: "/images/Icons/PreSchool.svg",
         modules: [
             {
                 id: "Attendance-Module",
@@ -90,7 +90,7 @@ const modulesData = {
     "Hostal Management": {
         title: "Hostal Management",
         description: "Advanced software solutions for hostel management, student accommodation, and facility administration.",
-        image: "/Images/Icons/Hostal Management.svg",
+        image: "/images/Icons/Hostal Management.svg",
         modules: [
             {
                 id: "Room-Bed-Management",
@@ -177,7 +177,7 @@ const modulesData = {
     "Printing and Document Management": {
         title: "Printing and Document Management",
         description: "Comprehensive software solutions for printing businesses and document management systems.",
-        image: "/Images/Icons/Printing and Document.svg",
+        image: "/images/Icons/Printing and Document.svg",
         modules: [
             {
                 id: "File-Management-Module",
@@ -240,7 +240,7 @@ const modulesData = {
     "Coachings, Schools, Educational Institutions": {
         title: "Coachings, Schools, Educational Institutions",
         description: "Comprehensive software solutions for educational institutions, coaching centers, and schools.",
-        image: "/Images/Icons/Coachings, Schools,.svg",
+        image: "/images/Icons/Coachings, Schools,.svg",
         modules: [
             {
                 id: "Attendance-Module",
@@ -327,7 +327,7 @@ const modulesData = {
     "Outdoor Media Agencies": {
         title: "Outdoor Media Agencies",
         description: "Innovative software solutions for outdoor media agencies to manage advertising campaigns and billboards.",
-        image: "/Images/Icons/Outdoor Media Agencies.svg",
+        image: "/images/Icons/Outdoor Media Agencies.svg",
         modules: [
             {
                 id: "Dashboard",
@@ -414,7 +414,7 @@ const modulesData = {
     "Religious Application": {
         title: "Religious Application",
         description: "Specialized software solutions for religious institutions, temples, and spiritual organizations.",
-        image: "/Images/Icons/Religious Application.svg",
+        image: "/images/Icons/Religious Application.svg",
         modules: [
             {
                 id: "Dashboard",
@@ -509,7 +509,7 @@ const modulesData = {
     "Organisational Software": {
         title: "Organisational Software",
         description: "Comprehensive organizational software solutions for businesses of all sizes and industries.",
-        image: "/Images/Icons/Organisational Software.svg",
+        image: "/images/Icons/Organisational Software.svg",
         modules: [
             {
                 id: "Dashboard",
@@ -604,7 +604,7 @@ const modulesData = {
     "HRMS Software": {
         title: "HRMS Software",
         description: "Comprehensive Human Resource Management System for employee management and HR operations.",
-        image: "/Images/Icons/HRMS Software.svg",
+        image: "/images/Icons/HRMS Software.svg",
         modules: [
             {
                 id: "Dashboard",
@@ -715,7 +715,7 @@ const modulesData = {
     "Billing Software": {
         title: "Billing Software",
         description: "Advanced billing and invoicing software solutions for businesses and service providers.",
-        image: "/Images/Icons/Billing Software.svg",
+        image: "/images/Icons/Billing Software.svg",
         modules: [
             {
                 id: "Invoice-Generation",
@@ -802,7 +802,7 @@ const modulesData = {
     "Manufacturing Industries": {
         title: "Manufacturing Industries",
         description: "Comprehensive software solutions for manufacturing industries to optimize production and operations.",
-        image: "/Images/Icons/Manufacturing.svg",
+        image: "/images/Icons/Manufacturing.svg",
         modules: [
             {
                 id: "Dashboard",
