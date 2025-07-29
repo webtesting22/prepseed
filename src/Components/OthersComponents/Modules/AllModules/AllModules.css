@@ -167,7 +167,7 @@
     }
 
     .all-modules-card-image {
-        height: 160px;
+        height: 100%;
         padding: 16px;
     }
 }
@@ -182,6 +182,9 @@
     }
 
     .all-modules-card-image {
-        height: 140px;
+        height: 100%;
+        justify-content: start;
+        background-color: white;
+        border-bottom: unset !important;
     }
 }
