@@ -2,7 +2,7 @@ import React from "react";
 import "./SolutionsHome.css";
 import { Row, Col } from "antd";
 import TheSolutionsData from "./TheSolutionsData";
-import TheCenterSolutionsGraphic from "/Images/TheSolutionsCenterCircle.svg"
+import TheCenterSolutionsGraphic from "../../../../public/Images/TheSolutionsCenterCircle.svg"
 const SolutionsHome = () => {
 
     return (

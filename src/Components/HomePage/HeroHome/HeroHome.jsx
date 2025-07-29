@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./HeroHome.css";
 import { Row, Col } from "antd"
-import HeroBackLines from "/Images/HeroBackLines.svg"
+import HeroBackLines from "../../../../public/Images/HeroBackLines.svg"
 // import HeroHomePortalImage from "/Images/HeroHomePortalImage.webp"
 import { Link } from "react-router-dom";
 const HeroHome = () => {
@@ -24,7 +24,7 @@ const HeroHome = () => {
                                     <h1>AI-First, White-Labeled Software for Smarter Workflows</h1>
                                     <p>Empowering enterprises with <span className="color">smart</span>, scalable solutions that eliminate busywork and <span className="color">boost efficiency</span>.</p>
                                     <div className="marginTop20">
-                                       <Link to="/about"> <button className="all-industries-btn">Get Started</button></Link>
+                                        <Link to="/about"> <button className="all-industries-btn">Get Started</button></Link>
                                     </div>
                                 </div>
                             </Col>
