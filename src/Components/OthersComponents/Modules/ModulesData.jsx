@@ -87,8 +87,8 @@ const modulesData = {
             }
         ]
     },
-    "Hostal Management": {
-        title: "Hostal Management",
+    "Hostel Management": {
+        title: "Hostel Management",
         description: "Advanced software solutions for hostel management, student accommodation, and facility administration.",
         image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Hostal Management.png",
         modules: [

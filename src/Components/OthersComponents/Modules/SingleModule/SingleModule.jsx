@@ -5,11 +5,11 @@ import modulesData from "../ModulesData";
 
 const SingleModule = () => {
     const { moduleId } = useParams();
-    
+
     // Find the module across all industries
     let moduleData = null;
     let industryName = "";
-    
+
     for (const [industry, data] of Object.entries(modulesData)) {
         const foundModule = data.modules.find(module => module.id === moduleId);
         if (foundModule) {
@@ -50,7 +50,7 @@ const SingleModule = () => {
                         <span> / </span>
                         <span>{moduleData.title}</span>
                     </div>
-                    
+
                     {/* Module Hero Section */}
                     <div className="module-hero">
                         <div className="module-info">
@@ -68,7 +68,7 @@ const SingleModule = () => {
                             </div> */}
                         </div>
                     </div>
-                    
+
                     {/* Module Content */}
                     <div className="module-content">
                         {/* Features Section */}
@@ -78,14 +78,14 @@ const SingleModule = () => {
                                 {moduleData.features.map((feature, index) => (
                                     <div key={index} className="feature-item">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                                         </svg>
                                         <span>{feature}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        
+
                         {/* CTA Section */}
                         <div className="cta-section">
                             <h2>Ready to Get Started?</h2>
