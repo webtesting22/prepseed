@@ -24,9 +24,11 @@ p .color {
   font-weight: 600;
 
 }
-a{
+
+a {
   text-decoration: none;
 }
+
 h1,
 h2,
 h3,
@@ -154,8 +156,13 @@ button {
 @media (max-width: 768px) {
   .MainContainer {
     padding: 40px 10px;
+    width: unset !important;
   }
+
   h1 {
     font-size: 40px;
+  }
+  .paddingTop {
+    padding-top: 50px;
   }
 }

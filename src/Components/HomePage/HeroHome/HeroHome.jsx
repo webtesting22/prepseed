@@ -3,6 +3,7 @@ import "./HeroHome.css";
 import { Row, Col } from "antd"
 import HeroBackLines from "/Images/HeroBackLines.svg"
 import HeroHomePortalImage from "/Images/HeroHomePortalImage.webp"
+import { Link } from "react-router-dom";
 const HeroHome = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -23,7 +24,7 @@ const HeroHome = () => {
                                     <h1>AI-First, White-Labeled Software for Smarter Workflows</h1>
                                     <p>Empowering enterprises with <span className="color">smart</span>, scalable solutions that eliminate busywork and <span className="color">boost efficiency</span>.</p>
                                     <div className="marginTop20">
-                                        <button className="all-industries-btn">Get Started</button>
+                                       <Link to="/about"> <button className="all-industries-btn">Get Started</button></Link>
                                     </div>
                                 </div>
                             </Col>

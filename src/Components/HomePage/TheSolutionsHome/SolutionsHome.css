@@ -81,4 +81,7 @@ padding-right: 50px;
    .PaddingAdjustRight{
     padding-right: 0px;
    }
+   .HierarchyItems>.ant-row .ant-col{
+    width: 50% !important;
+   }
 }

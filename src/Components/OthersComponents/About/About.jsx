@@ -37,18 +37,18 @@ const AnimatedCounter = ({ endValue, duration = 2000, suffix = "", prefix = "" }
         const animate = (currentTime) => {
             if (!startTime) startTime = currentTime;
             const progress = Math.min((currentTime - startTime) / duration, 1);
-            
+
             // Easing function for smooth animation
             const easeOutQuart = 1 - Math.pow(1 - progress, 4);
             const currentCount = Math.floor(easeOutQuart * endValue);
-            
+
             setCount(currentCount);
-            
+
             if (progress < 1) {
                 requestAnimationFrame(animate);
             }
         };
-        
+
         requestAnimationFrame(animate);
     }, [isVisible, endValue, duration]);
 
@@ -67,6 +67,7 @@ const AnimatedCounter = ({ endValue, duration = 2000, suffix = "", prefix = "" }
         </span>
     );
 };
+
 
 const About = () => {
     return (
@@ -91,22 +92,22 @@ const About = () => {
                                 <div className="PrepseedAchivementsBoxesItem">
                                     <h3>
                                         {item.title.includes('$') ? (
-                                            <AnimatedCounter 
-                                                endValue={parseFloat(item.title.replace(/[$,]/g, ''))} 
-                                                prefix="$" 
+                                            <AnimatedCounter
+                                                endValue={parseFloat(item.title.replace(/[$,]/g, ''))}
+                                                prefix="$"
                                                 suffix={item.title.includes('M') ? 'M' : ''}
                                                 duration={2500}
                                             />
                                         ) : item.title.includes('%') ? (
-                                            <AnimatedCounter 
-                                                endValue={parseInt(item.title)} 
-                                                suffix="%" 
+                                            <AnimatedCounter
+                                                endValue={parseInt(item.title)}
+                                                suffix="%"
                                                 duration={1500}
                                             />
                                         ) : item.title.includes('+') ? (
-                                            <AnimatedCounter 
-                                                endValue={parseInt(item.title.replace(/,/g, ''))} 
-                                                suffix="+" 
+                                            <AnimatedCounter
+                                                endValue={parseInt(item.title.replace(/,/g, ''))}
+                                                suffix="+"
                                                 duration={3000}
                                             />
                                         ) : (

@@ -170,6 +170,9 @@
 }
 
 @media (max-width: 480px) {
+    .provide-app-section{
+        padding: 0px 10px;
+    }
     .app-title {
         font-size: 28px;
     }

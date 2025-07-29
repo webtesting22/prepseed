@@ -38,4 +38,7 @@
     .heroHomeImage img{
         width: 95%;
     }
+    .heroHomeImage{
+        margin-top: 20px;
+    }
 }

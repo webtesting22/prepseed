@@ -42,6 +42,10 @@
     width: 100%;
 }
 
+.PrepseedAchivementsBoxes .ant-row .ant-col{
+    width:100%;
+}
+
 /* Animation keyframes for number reveal effect */
 @keyframes numberReveal {
     0% {
@@ -73,6 +77,10 @@
 @media (max-width: 768px) {
     .animated-counter {
         font-size: 0.9em;
+    }
+    .AboutUsImageContainer{
+        min-height: unset;
+        max-height: unset;
     }
 }
 

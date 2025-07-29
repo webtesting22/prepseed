@@ -139,9 +139,7 @@
 }
 
 @media (max-width: 768px) {
-    .all-modules-section {
-        padding: 40px 0;
-    }
+ 
 
     .all-modules-title {
         font-size: 28px;

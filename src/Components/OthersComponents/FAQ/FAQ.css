@@ -108,7 +108,7 @@
 /* Responsive design */
 @media (max-width: 768px) {
     .faq-container {
-        margin: 0 16px;
+        margin: 0 0px;
         border-radius: 8px;
     }
 
