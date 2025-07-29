@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Loader.css';
-import PrepseedIcon from './PrepseedLogo.png';
+// import PrepseedIcon from './PrepseedLogo.png';
 
 const Loader = ({ onLoadingComplete }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +66,7 @@ const Loader = ({ onLoadingComplete }) => {
             {showLogo && (
                 <div className="loader-logo-container">
                     <img 
-                        src={PrepseedIcon} 
+                        src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/PrepseedIcon.png"
                         alt="Prepseed" 
                         className={`loader-logo ${logoGlow ? 'logo-glow' : ''}`}
                     />

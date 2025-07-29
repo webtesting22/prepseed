@@ -90,7 +90,7 @@ h2 span {
 
 h2 span::after {
   content: "";
-  background-image: url("/Images/CommonHeadingBottom.svg");
+  background-image: url("https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/CommonHeadingBottom.png");
   min-height: 20px;
   position: absolute;
   width: 100%;
@@ -162,6 +162,7 @@ button {
   h1 {
     font-size: 40px;
   }
+
   .paddingTop {
     padding-top: 50px;
   }

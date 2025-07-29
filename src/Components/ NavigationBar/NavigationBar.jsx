@@ -21,7 +21,7 @@ const NavigationBar = () => {
                 {/* Logo Section */}
                 <Link to="/">
                     <div className="nav-logo">
-                        <img src="/Images/PrepseedLogo.svg" alt="Prepseed" className="logo-image" />
+                        <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/PrepseedLogo.png" alt="Prepseed" className="logo-image" />
                     </div>
                 </Link>
 

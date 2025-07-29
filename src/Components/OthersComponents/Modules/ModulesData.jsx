@@ -3,7 +3,7 @@ const modulesData = {
     "Pre-schools": {
         title: "Pre-schools",
         description: "Comprehensive software solutions designed specifically for pre-school management and early childhood education.",
-        image: "/images/Icons/PreSchool.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/PreSchool.png",
         modules: [
             {
                 id: "Attendance-Module",
@@ -90,7 +90,7 @@ const modulesData = {
     "Hostal Management": {
         title: "Hostal Management",
         description: "Advanced software solutions for hostel management, student accommodation, and facility administration.",
-        image: "/images/Icons/Hostal Management.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Hostal Management.png",
         modules: [
             {
                 id: "Room-Bed-Management",
@@ -177,7 +177,7 @@ const modulesData = {
     "Printing and Document Management": {
         title: "Printing and Document Management",
         description: "Comprehensive software solutions for printing businesses and document management systems.",
-        image: "/images/Icons/Printing and Document.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Printing and Document.png",
         modules: [
             {
                 id: "File-Management-Module",
@@ -240,7 +240,7 @@ const modulesData = {
     "Coachings, Schools, Educational Institutions": {
         title: "Coachings, Schools, Educational Institutions",
         description: "Comprehensive software solutions for educational institutions, coaching centers, and schools.",
-        image: "/images/Icons/Coachings, Schools,.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Coachings, Schools,.png",
         modules: [
             {
                 id: "Attendance-Module",
@@ -327,7 +327,7 @@ const modulesData = {
     "Outdoor Media Agencies": {
         title: "Outdoor Media Agencies",
         description: "Innovative software solutions for outdoor media agencies to manage advertising campaigns and billboards.",
-        image: "/images/Icons/Outdoor Media Agencies.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Outdoor Media Agencies.png",
         modules: [
             {
                 id: "Dashboard",
@@ -414,7 +414,7 @@ const modulesData = {
     "Religious Application": {
         title: "Religious Application",
         description: "Specialized software solutions for religious institutions, temples, and spiritual organizations.",
-        image: "/images/Icons/Religious Application.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Religious Application.png",
         modules: [
             {
                 id: "Dashboard",
@@ -509,7 +509,7 @@ const modulesData = {
     "Organisational Software": {
         title: "Organisational Software",
         description: "Comprehensive organizational software solutions for businesses of all sizes and industries.",
-        image: "/images/Icons/Organisational Software.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Organisational Software.png",
         modules: [
             {
                 id: "Dashboard",
@@ -604,7 +604,7 @@ const modulesData = {
     "HRMS Software": {
         title: "HRMS Software",
         description: "Comprehensive Human Resource Management System for employee management and HR operations.",
-        image: "/images/Icons/HRMS Software.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/HRMS Software.png",
         modules: [
             {
                 id: "Dashboard",
@@ -715,7 +715,7 @@ const modulesData = {
     "Billing Software": {
         title: "Billing Software",
         description: "Advanced billing and invoicing software solutions for businesses and service providers.",
-        image: "/images/Icons/Billing Software.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Billing Software.png",
         modules: [
             {
                 id: "Invoice-Generation",
@@ -802,7 +802,7 @@ const modulesData = {
     "Manufacturing Industries": {
         title: "Manufacturing Industries",
         description: "Comprehensive software solutions for manufacturing industries to optimize production and operations.",
-        image: "/images/Icons/Manufacturing.svg",
+        image: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Manufacturing.png",
         modules: [
             {
                 id: "Dashboard",

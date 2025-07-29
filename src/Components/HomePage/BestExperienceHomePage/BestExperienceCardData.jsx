@@ -1,9 +1,8 @@
-import customizationIIcon from "/images/customizationIIcon.svg"
-import software from "/images/software.svg"
+
 const BestExperienceCardData = [
     {
         id: 1,
-        icons: customizationIIcon,
+        icons: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/customizationIIcon.png",
         title: "Custom Software for Every Industry",
         description: <>
             <h4>ERP, CRM, HRMS & Beyond</h4>
@@ -14,7 +13,7 @@ const BestExperienceCardData = [
     },
     {
         id: 2,
-        icons: software,
+        icons: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/software.png",
         title: "Web & Mobile Apps Aligned to You",
         description: <>
             <h4>Anywhere Access. Personalized Experience.</h4>

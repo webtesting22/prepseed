@@ -2,7 +2,7 @@ import React from "react";
 import "./SolutionsHome.css";
 import { Row, Col } from "antd";
 import TheSolutionsData from "./TheSolutionsData";
-import TheCenterSolutionsGraphic from "../../../../public/Images/TheSolutionsCenterCircle.svg"
+// import TheCenterSolutionsGraphic from "../../../../public/Images/TheSolutionsCenterCircle.svg"
 const SolutionsHome = () => {
 
     return (
@@ -24,7 +24,7 @@ const SolutionsHome = () => {
                         <Col lg={12}>
                             <div className="HierarchyContainer">
                                 <div className="HierarchyContainerCenterCircle">
-                                    <img src={TheCenterSolutionsGraphic} alt="TheCenterSolutionsGraphic" />
+                                    <img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/TheSolutionsCenterCircle.png" alt="TheCenterSolutionsGraphic" />
                                 </div>
                                 <div className="HierarchyItems">
                                     <Row>
