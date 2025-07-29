@@ -2,22 +2,22 @@ const AchivementData = [
     {
         title: "250,000+",
         description: "Active Users",
-        description: "across 260+ businesses"
+        description: "Across 260+ businesses"
     },
     {
-        title: "$1.2M",
-        description: "Funding Secured",
-        description: "valuation in 2023"
+        title: "50+",
+        description: "Software Modules",
+        description: "Developed and deployed"
     },
     {
         title: "100%",
         description: "Client Retention",
-        description: "satisfaction rate"
+        description: "Satisfaction rate"
     },
     {
         title: "100%",
         description: "Client Satisfaction",
-        description: "from feedback"
+        description: "From feedback"
     }
 ]   
 export default AchivementData;

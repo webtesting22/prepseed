@@ -35,9 +35,9 @@ const WhatsNew = () => {
                                 </div>
                             </div>
                             <p className="card-description">{mainCard.description}</p>
-                            <a href="#" className="read-more-link">
+                            {/* <a href="#" className="read-more-link">
                                 Read more →
-                            </a>
+                            </a> */}
                         </div>
                     </div>
 
@@ -58,9 +58,9 @@ const WhatsNew = () => {
                                         </div>
                                     </div>
                                     <p className="feature-card-description">{card.description}</p>
-                                    <a href="#" className="read-more-link">
+                                    {/* <a href="#" className="read-more-link">
                                         Read more →
-                                    </a>
+                                    </a> */}
                                 </div>
                             </div>
                         ))}

@@ -77,7 +77,7 @@ const About = () => {
                     <h2 className="textCenter">Your Trusted Partner in Financial <span>Success</span></h2>
                     <p className="textCenter paraWeight">Built to empower your goals, streamline tasks, and give you full control over your finances, comprehensive tools tailored to meet all your financial needs.</p>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <button className="all-industries-btn">Get Started</button>
+                        {/* <button className="all-industries-btn">Get Started</button> */}
                     </div>
                 </div>
                 <div className="marginTop50 marginBottom50">
