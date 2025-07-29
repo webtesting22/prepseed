@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { BrowserRouter, useLocation } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import Footer from './Components/Footer/Footer'
 import BluryLineBottom from './Components/OthersComponents/BluryLineBottom/BluryLineBottom'
 import Loader from './Components/Loader/Loader'
@@ -54,12 +55,12 @@ function App() {
   }
 
   return (
-    <>
+    <HelmetProvider>
       {isLoading && <Loader onLoadingComplete={handleLoadingComplete} />}
       <BrowserRouter>
         <AppContent />
       </BrowserRouter>
-    </>
+    </HelmetProvider>
   )
 }
 
