@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Loader.css';
-import PrepseedIcon from '/Images/3DLogo.png';
+import PrepseedIcon from './PrepseedLogo.png';
 
 const Loader = ({ onLoadingComplete }) => {
     const [isLoading, setIsLoading] = useState(true);
