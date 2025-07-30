@@ -15,9 +15,9 @@ const NavigationNarLinksData = [
         name: "Clients",
         link: "/our-clients"
     },
-    {
-        name: "Create Portal",
-        link: "/create-own-portal"
-    },
+    // {
+    //     name: "Create Portal",
+    //     link: "/create-own-portal"
+    // },
 ]   
 export default NavigationNarLinksData;
