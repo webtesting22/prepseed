@@ -10,6 +10,8 @@ import IndusriesWiseModules from '../OthersComponents/Modules/IndusriesWiseModul
 import SingleModule from '../OthersComponents/Modules/SingleModule/SingleModule';
 import Policies from '../OthersComponents/Policies/Policies';
 import NotFound from '../NotFound/NotFound';
+import CreateOwnPortal from '../CreateOwnPortal/CreateOwnPortal';
+import ResetPassword from '../ResetPassword/ResetPassword';
 
 const AnimatedRoutes = () => {
     const location = useLocation();
@@ -82,13 +84,30 @@ const AnimatedRoutes = () => {
                     } 
                 />
                 <Route 
+                    path="/create-own-portal" 
+                    element={
+                        <PageTransition>
+                            <CreateOwnPortal />
+                        </PageTransition>
+                    } 
+                />
+                <Route 
+                    path="/reset" 
+                    element={
+                        <PageTransition>
+                            <ResetPassword />
+                        </PageTransition>
+                    } 
+                />
+                <Route 
                     path="*" 
                     element={
                         <PageTransition>
                             <NotFound />
                         </PageTransition>
-                    } 
+                    }   
                 />
+
             </Routes>
         </AnimatePresence>
     );

@@ -8,7 +8,7 @@ import ProvideApp from './Components/OthersComponents/ProvideApp/ProvideApp'
 import NavigationBar from './Components/ NavigationBar/NavigationBar'
 import AnimatedRoutes from './Components/AnimatedRoutes/AnimatedRoutes'
 import Flowbtn from './Components/FlowBtn/Flowbtn'
-
+import CreateOwnPortal from './Components/CreateOwnPortal/CreateOwnPortal'
 function AppContent() {
   const location = useLocation();
 
@@ -17,7 +17,7 @@ function AppContent() {
     const path = location.pathname;
 
     // Exact matches
-    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services'];
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services', '/create-own-portal', '/reset' ];
     if (exactRoutes.includes(path)) return true;
 
     // Policy routes
