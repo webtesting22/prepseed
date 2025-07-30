@@ -66,7 +66,7 @@ const Loader = ({ onLoadingComplete }) => {
             {showLogo && (
                 <div className="loader-logo-container">
                     <img 
-                        src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/PrepseedIcon.png"
+                        src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/3DLogo.png"
                         alt="Prepseed" 
                         className={`loader-logo ${logoGlow ? 'logo-glow' : ''}`}
                     />
