@@ -47,10 +47,10 @@ const Footer = () => {
                         <div className="footer-section">
                             <h3 className="footer-heading">Inner Pages</h3>
                             <ul className="footer-links">
-                                <li><Link to="/policies/privacy-policy" className="footer-link">Privacy Policy</Link></li>
-                                <li><Link to="/policies/terms-of-use" className="footer-link">Terms of Use</Link></li>
-                                <li><Link to="/policies/refund-policy" className="footer-link">Refund Policy</Link></li>
-                                <li><Link to="/policies/shipping-delivery-policy" className="footer-link">Shipping and Delivery Policy</Link></li>
+                                <li><Link to="/privacy-policy" className="footer-link">Privacy Policy</Link></li>
+                                <li><Link to="/terms-of-use" className="footer-link">Terms of Use</Link></li>
+                                <li><Link to="/refund-policy" className="footer-link">Refund Policy</Link></li>
+                                <li><Link to="/shipping-delivery-policy" className="footer-link">Shipping and Delivery Policy</Link></li>
                             </ul>
                         </div>
 

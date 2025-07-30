@@ -12,7 +12,7 @@ const Policies = () => {
 
     // If no valid policy is found, redirect to privacy policy
     if (!policyData) {
-        navigate("/policies/privacy-policy");
+        navigate("/privacy-policy");
         return null;
     }
 

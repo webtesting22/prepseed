@@ -76,7 +76,7 @@ const AnimatedRoutes = () => {
                     } 
                 />
                 <Route 
-                    path="/policies/:policyType" 
+                    path="/:policyType" 
                     element={
                         <PageTransition>
                             <Policies />
