@@ -8,7 +8,7 @@ const clientsData = [
     },
     {
         name: "Chiripal",
-        logo: "https://chiripalgroup.com/wp-content/uploads/2022/02/Chiripal-Logo.png",
+        logo: "https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/Screenshot 2025-07-30 at 2.51.45 PM.png",
         portalUrl: "https://reliablekota.prepseed.com",
         websiteUrl: "https://chiripalgroup.com/",
         tags: ["coaching"],
