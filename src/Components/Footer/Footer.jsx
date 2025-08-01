@@ -13,7 +13,7 @@ const Footer = () => {
                         <div className="footer-section">
                             <div className="company-info">
                                 <h2 className="company-name">Prepseed</h2>
-                                <p className="company-tagline">Trustify is the most used Chat Marketing Platform.</p>
+                                <p className="company-tagline">Prepseed is the most used Chat Marketing Platform.</p>
                             </div>
                             <div className="newsletter-section">
                                 <h3 className="newsletter-title">Subscribe to newsletter.</h3>
