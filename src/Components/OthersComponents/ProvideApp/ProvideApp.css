@@ -58,8 +58,8 @@
 .app-buttons {
     display: flex;
     gap: 16px;
-    justify-content: center;
-    margin-top: 32px;
+    /* justify-content: center; */
+    /* margin-top: 32px; */
 }
 
 .app-btn {
@@ -148,7 +148,7 @@
     }
 
     .app-buttons {
-        flex-direction: column;
+        /* flex-direction: column; */
         align-items: center;
     }
 

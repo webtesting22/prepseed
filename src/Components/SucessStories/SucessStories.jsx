@@ -20,7 +20,7 @@ const SucessStories = () => {
                             <h2 className="textCenter">Real Success <span>Stories</span>, Real Impact</h2>
                             <p className="paraWeight textCenter">Discover how our students and partner institutions are achieving remarkable results.</p>
                         </div>
-                        <div className="marginTop50 maxWidth600 paddingTop50">
+                        <div className="marginTop50  paddingTop50">
                             <div>
                                 <Row>
                                     {/* <Col lg={6}>
@@ -28,13 +28,22 @@ const SucessStories = () => {
                                     <Col lg={24}>
                                         <div>
                                             <Swiper
-                                                slidesPerView={1}
+                                                slidesPerView={2}
                                                 spaceBetween={30}
                                                 freeMode={true}
                                                 speed={800}
+                                                loop={true}
                                                 // pagination={{
                                                 //     clickable: true,
                                                 // }}
+                                                breakpoints={{
+                                                    0: {
+                                                        slidesPerView: 1,
+                                                    },
+                                                    768: {
+                                                        slidesPerView: 2,
+                                                    },
+                                                }}
                                                 autoplay={{
                                                     delay: 2500,
                                                     disableOnInteraction: false,
