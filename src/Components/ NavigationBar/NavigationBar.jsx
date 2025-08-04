@@ -48,7 +48,7 @@ const NavigationBar = () => {
 
                 {/* Action Buttons */}
                 <div className="nav-actions">
-                    <Link to="tel:+919913382221" className="nav-btn primary-btn">Contact Prepseed</Link>
+                    <Link to="tel:+919913382221" className="nav-btn primary-btn" style={{background:"black",color:"white"}}>Contact Prepseed</Link>
                     {/* <button className="nav-btn secondary-btn">View Services</button> */}
                     {/* <Link to="mailto:vivek@prepseed.com" className="nav-btn primary-btn">vivek@prepseed.com</Link> */}
                 </div>
