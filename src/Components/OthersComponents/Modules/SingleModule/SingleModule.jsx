@@ -92,7 +92,7 @@ const SingleModule = () => {
                             <p>Contact us to learn more about this module and how it can benefit your business.</p>
                             <div className="cta-buttons">
                                 {/* <button className="primary-btn">Request Demo</button> */}
-                                <Link to="tel:+919913382221" className="nav-btn primary-btn" style={{background:"black",color:"white"}}>Contact Prepseed</Link>
+                                <Link to="tel:+919913382221" className="nav-btn primary-btn" style={{ background: "black", color: "white" }}>Contact Prepseed</Link>
                             </div>
                         </div>
                     </div>

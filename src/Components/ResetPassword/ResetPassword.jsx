@@ -19,7 +19,7 @@ const { Title, Text } = Typography;
 
 // API function to reset password
 const resetPassword = async (password, token) => {
-    const response = await fetch('http://napi.prepseed.com/users/resetPassword', {
+    const response = await fetch('https://napi.prepseed.com/users/resetPassword', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
