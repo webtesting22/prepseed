@@ -8,7 +8,7 @@ import ProvideApp from './Components/OthersComponents/ProvideApp/ProvideApp'
 import NavigationBar from './Components/ NavigationBar/NavigationBar'
 import AnimatedRoutes from './Components/AnimatedRoutes/AnimatedRoutes'
 import Flowbtn from './Components/FlowBtn/Flowbtn'
-import CreateOwnPortal from './Components/CreateOwnPortal/CreateOwnPortal'
+// import CreateOwnPortal from './Components/CreateOwnPortal/CreateOwnPortal'
 import PoliciesData from './Components/OthersComponents/Policies/PoliciesData'
 
 function AppContent() {
@@ -19,7 +19,7 @@ function AppContent() {
     const path = location.pathname;
 
     // Exact matches
-    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services', '/create-own-portal', '/reset' ];
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services', '/create-own-portal', '/login', '/reset' ];
     if (exactRoutes.includes(path)) return true;
 
     // Policy routes - check if the path matches any policy name
@@ -39,15 +39,22 @@ function AppContent() {
     return false;
   };
 
+  // Check if current route should hide header and footer
+  const shouldHideCommonComponents = () => {
+    const path = location.pathname;
+    return path === '/login';
+  };
+
   const isNotFoundPage = !isValidRoute();
+  const hideComponents = shouldHideCommonComponents();
 
   return (
     <>
-      {!isNotFoundPage && <NavigationBar />}
+      {!isNotFoundPage && !hideComponents && <NavigationBar />}
       <AnimatedRoutes />
-      {!isNotFoundPage && <ProvideApp />}
-      {!isNotFoundPage && <Footer />}
-      {!isNotFoundPage && <BluryLineBottom />}
+      {/* {!isNotFoundPage && !hideComponents && <ProvideApp />} */}
+      {!isNotFoundPage && !hideComponents && <Footer />}
+      {!isNotFoundPage && !hideComponents && <BluryLineBottom />}
       <Flowbtn />
     </>
   );
