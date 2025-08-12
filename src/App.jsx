@@ -19,7 +19,7 @@ function AppContent() {
     const path = location.pathname;
 
     // Exact matches
-    const exactRoutes = ['/', '/about', '/our-clients', '/modules','/creating-portal', '/services','/reset' ];
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/creating-portal', '/services', '/reset'];
     if (exactRoutes.includes(path)) return true;
 
     // Policy routes - check if the path matches any policy name

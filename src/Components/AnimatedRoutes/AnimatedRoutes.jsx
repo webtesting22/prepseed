@@ -10,102 +10,104 @@ import IndusriesWiseModules from '../OthersComponents/Modules/IndusriesWiseModul
 import SingleModule from '../OthersComponents/Modules/SingleModule/SingleModule';
 import Policies from '../OthersComponents/Policies/Policies';
 import NotFound from '../NotFound/NotFound';
-import CreateOwnPortal from '../CreateOwnPortal/CreateOwnPortal';
+// import CreateOwnPortal from '../CreateOwnPortal/CreateOwnPortal';
 import ResetPassword from '../ResetPassword/ResetPassword';
 
+import WrapIndex from '../DynamicPortal/StepByStepComponents/WrapIndex';
 const AnimatedRoutes = () => {
     const location = useLocation();
 
     return (
         <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-                <Route 
-                    path="/" 
+                <Route
+                    path="/"
                     element={
                         <PageTransition>
                             <HomePageRoutes />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/about" 
+                <Route
+                    path="/about"
                     element={
                         <PageTransition>
                             <AboutUs />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/our-clients" 
+                <Route
+                    path="/our-clients"
                     element={
                         <PageTransition>
                             <AllClients />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/modules" 
+                <Route
+                    path="/modules"
                     element={
                         <PageTransition>
                             <AllModules />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/services" 
+                <Route
+                    path="/services"
                     element={
                         <PageTransition>
                             <AllModules />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/industry/:industryName" 
+                <Route
+                    path="/industry/:industryName"
                     element={
                         <PageTransition>
                             <IndusriesWiseModules />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/module/:moduleId" 
+                <Route
+                    path="/module/:moduleId"
                     element={
                         <PageTransition>
                             <SingleModule />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/:policyType" 
+                <Route
+                    path="/:policyType"
                     element={
                         <PageTransition>
                             <Policies />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="/create-own-portal" 
-                    element={
-                        <PageTransition>
-                            <CreateOwnPortal />
-                        </PageTransition>
-                    } 
-                />
-                <Route 
-                    path="/reset" 
+
+                <Route
+                    path="/reset"
                     element={
                         <PageTransition>
                             <ResetPassword />
                         </PageTransition>
-                    } 
+                    }
                 />
-                <Route 
-                    path="*" 
+                <Route
+                    path="/creating-portal"
+                    element={
+                        <PageTransition>
+                            <WrapIndex />
+                        </PageTransition>
+                    }
+                />
+                <Route
+                    path="*"
                     element={
                         <PageTransition>
                             <NotFound />
                         </PageTransition>
-                    }   
+                    }
                 />
 
             </Routes>
