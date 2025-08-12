@@ -451,14 +451,14 @@ const LogoUploadContainer = () => {
                 }}
                 onMouseEnter={(e) => {
                   if (!isColorSelected(color)) {
-                    e.target.style.borderColor = "#94a3b8";
-                    e.target.style.backgroundColor = "#f8fafc";
+                    e.currentTarget.style.borderColor = "#94a3b8";
+                    e.currentTarget.style.backgroundColor = "#f8fafc";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isColorSelected(color)) {
-                    e.target.style.borderColor = "#e2e8f0";
-                    e.target.style.backgroundColor = "white";
+                    e.currentTarget.style.borderColor = "#e2e8f0";
+                    e.currentTarget.style.backgroundColor = "white";
                   }
                 }}
               >
