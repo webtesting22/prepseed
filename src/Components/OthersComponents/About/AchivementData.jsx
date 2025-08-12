@@ -1,23 +1,23 @@
 const AchivementData = [
-    {
-        title: "250,000+",
-        description: "Active Users",
-        description: "Across 260+ businesses"
-    },
-    {
-        title: "50+",
-        description: "Software Modules",
-        description: "Developed and deployed"
-    },
-    {
-        title: "100%",
-        description: "Client Retention",
-        description: "Satisfaction rate"
-    },
-    {
-        title: "100%",
-        description: "Client Satisfaction",
-        description: "From feedback"
-    }
-]   
+  {
+    title: "250,000+",
+    description: "Active Users",
+    descriptin: "Across 260+ businesses",
+  },
+  {
+    title: "50+",
+    description: "Software Modules",
+    descriptin: "Developed and deployed",
+  },
+  {
+    title: "100%",
+    description: "Client Retention",
+    descriptin: "Satisfaction rate",
+  },
+  {
+    title: "100%",
+    description: "Client Satisfaction",
+    descriptin: "From feedback",
+  },
+];
 export default AchivementData;
