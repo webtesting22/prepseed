@@ -26,9 +26,9 @@
 
 .mockups-container {
     display: flex;
-    gap: 60px;
+    gap: 30px;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     width: 100%;
     max-width: 1200px;
 }
@@ -39,32 +39,387 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    width: 40%;
 }
 
-.mockup-image {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-.iphone-svg {
+.iphone-frame {
     width: 280px;
-    height: auto;
+    height: 580px;
+    background: transparent;
+    border: 5px solid #1a1a1a;
+    border-radius: 40px;
+    padding: 2px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 
-.iphone-screen-content {
+.iphone-notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 30px;
+    /* background: #1a1a1a; */
+    border-radius: 15px;
+    z-index: 2;
+}
+
+.iphone-screen {
+    width: 100%;
+    height: 100%;
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.iphone-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    color: black;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    z-index: 3;
+}
+
+.status-left{
+    margin-left: 15px;
+}
+.status-left .time {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.dynamic-island {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 30px;
+    background: #000;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.island-camera {
+    width: 8px;
+    height: 8px;
+    background: #1a1a1a;
+    border-radius: 50%;
+}
+
+.island-speaker {
+    width: 6px;
+    height: 6px;
+    background: #1a1a1a;
+    border-radius: 50%;
+}
+
+.status-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.signal-bars {
+    display: flex;
+    align-items: end;
+    gap: 1px;
+    height: 12px;
+}
+
+.signal-bars span {
+    width: 3px;
+    background: black;
+    border-radius: 1px;
+}
+
+.signal-bars span:nth-child(1) {
+    height: 4px;
+}
+
+.signal-bars span:nth-child(2) {
+    height: 6px;
+}
+
+.signal-bars span:nth-child(3) {
+    height: 8px;
+}
+
+.signal-bars span:nth-child(4) {
+    height: 10px;
+}
+
+.wifi-icon {
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.battery {
+    width: 24px;
+    height: 10px;
+    border: 1px solid black;
+    border-radius: 2px;
+    padding: 1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.battery::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 3px;
+    width: 2px;
+    height: 6px;
+    background: black;
+    border-radius: 0 1px 1px 0;
+}
+
+.battery-percentage {
+    font-size: 6px;
+    color: black;
+    font-weight: 600;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+.battery-level {
+    width: 18px;
+    height: 100%;
+    background: #4ade80;
+    border-radius: 1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: white;
+    transition: all 0.5s ease;
+    min-width: 4px;
+}
+
+.battery-level span {
+    font-size: 6px;
+    line-height: 1;
+}
+
+.battery-level.active {
+    animation: pulse 1s infinite;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+.drain-indicator {
+    font-size: 8px;
+    color: #fbbf24;
+    animation: flash 1.5s infinite;
+    margin-left: 2px;
+}
+
+@keyframes flash {
+    0%, 50% { opacity: 1; }
+    25%, 75% { opacity: 0.3; }
+}
+
+/* Low Battery Warning Overlay */
+.low-battery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(239, 68, 68, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 32px;
+    animation: fadeIn 0.3s ease;
+}
+
+.low-battery-content {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.battery-warning-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: pulse 2s infinite;
+}
+
+.low-battery-content h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.low-battery-content p {
+    font-size: 14px;
+    margin: 0 0 20px 0;
+    opacity: 0.9;
+}
+
+.connect-charge-btn {
+    background: white;
+    color: #ef4444;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.connect-charge-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.connect-charge-btn:active {
+    transform: translateY(0);
+}
+
+/* Charging Overlay */
+.charging-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(34, 197, 94, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 32px;
+    animation: fadeIn 0.3s ease;
+}
+
+.charging-content {
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.charging-animation {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.lightning-bolt {
+    font-size: 48px;
+    color: #fbbf24;
+    animation: lightning 1s infinite;
+    z-index: 2;
+    position: relative;
+}
+
+.charging-pulse {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 200px;
-    height: 350px;
+    width: 80px;
+    height: 80px;
+    background: rgba(251, 191, 36, 0.3);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+.charging-content h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.charging-content p {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes lightning {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        filter: brightness(1.3);
+    }
+}
+
+/* Battery level transitions */
+.battery-level {
+    transition: all 0.5s ease;
+}
+
+.battery-level.low {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+.iphone-content {
     background: white;
-    border-radius: 20px;
+    border-radius: 35px;
     padding: 20px;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding-top: 50px;
+    margin: 0 8px 8px 8px;
 }
 
 .iphone-header {
@@ -73,14 +428,14 @@
 }
 
 .iphone-header h3 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: #1e293b;
     margin: 0 0 4px 0;
 }
 
 .iphone-header p {
-    font-size: 11px;
+    font-size: 12px;
     color: #64748b;
     margin: 0;
 }
@@ -89,25 +444,25 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .mock-logo {
     text-align: center;
-    padding: 16px;
+    padding: 20px;
     background: #f8fafc;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 2px dashed #e2e8f0;
 }
 
 .mock-logo span {
-    font-size: 24px;
+    font-size: 32px;
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .mock-logo h4 {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #1e293b;
     margin: 0;
@@ -116,48 +471,58 @@
 .mock-features {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .feature-item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
+    gap: 8px;
+    padding: 8px 12px;
     background: #f1f5f9;
-    border-radius: 6px;
-    font-size: 10px;
+    border-radius: 8px;
+    font-size: 12px;
     color: #475569;
 }
 
 .feature-item span:first-child {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .mock-status {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
     margin-top: auto;
-    padding: 10px;
+    padding: 12px;
     background: #dcfce7;
-    border-radius: 6px;
-    font-size: 10px;
+    border-radius: 8px;
+    font-size: 12px;
     color: #15803d;
     font-weight: 500;
+    flex-wrap: wrap;
+}
+
+.battery-status {
+    font-size: 10px;
+    padding: 4px 8px;
+    background: rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    margin-left: auto;
 }
 
 .status-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: #22c55e;
 }
 
 .status-dot.active {
     background: #22c55e;
-    box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
 }
 
 /* MacBook Pro Mockup */
@@ -166,54 +531,74 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    width: 60%;
 }
 
-.macbook-svg {
+.macbook-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.macbook-screen {
     width: 400px;
-    height: auto;
+    height: 250px;
+    background: transparent;
+    border: 3px solid #1a1a1a;
+    border-radius: 8px 8px 0 0;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 
-.macbook-screen-content {
+.macbook-notch {
     position: absolute;
-    top: 8%;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 320px;
-    height: 180px;
+    width: 60px;
+    height: 8px;
+    background: #1a1a1a;
+    border-radius: 0 0 4px 4px;
+    z-index: 2;
+}
+
+.macbook-content {
+    width: 100%;
+    height: 100%;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .macbook-menu-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 12px;
+    padding: 8px 16px;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #e2e8f0;
-    font-size: 10px;
+    font-size: 12px;
     color: #374151;
 }
 
 .menu-left {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-weight: 500;
 }
 
 .apple-logo {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .menu-center {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     font-weight: 400;
 }
 
@@ -233,12 +618,12 @@
 
 .control-buttons {
     display: flex;
-    gap: 4px;
+    gap: 6px;
 }
 
 .control-btn {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     cursor: pointer;
     transition: opacity 0.2s;
@@ -264,62 +649,62 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    gap: 12px;
+    padding: 20px;
+    gap: 16px;
 }
 
 .mock-dashboard {
     background: white;
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: 12px;
+    padding: 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    gap: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 8px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .dashboard-header h4 {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     color: #1e293b;
     margin: 0;
 }
 
 .version {
-    font-size: 10px;
+    font-size: 12px;
     color: #64748b;
     background: #f1f5f9;
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 4px 8px;
+    border-radius: 4px;
 }
 
 .dashboard-stats {
     display: flex;
-    gap: 8px;
+    gap: 12px;
 }
 
 .stat-card {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px;
+    gap: 8px;
+    padding: 12px;
     background: #f8fafc;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #e2e8f0;
 }
 
 .stat-icon {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .stat-info {
@@ -328,31 +713,31 @@
 }
 
 .stat-number {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
     color: #1e293b;
     line-height: 1;
 }
 
 .stat-label {
-    font-size: 9px;
+    font-size: 11px;
     color: #64748b;
-    margin-top: 1px;
+    margin-top: 2px;
 }
 
 .mock-chart {
     display: flex;
     align-items: end;
-    gap: 6px;
-    height: 40px;
+    gap: 8px;
+    height: 60px;
     margin-top: auto;
 }
 
 .chart-bar {
     flex: 1;
     background: linear-gradient(to top, #3b82f6, #60a5fa);
-    border-radius: 3px 3px 0 0;
-    min-height: 15px;
+    border-radius: 4px 4px 0 0;
+    min-height: 20px;
     transition: height 0.3s ease;
 }
 
@@ -379,9 +764,11 @@
 .macbook-base {
     width: 450px;
     height: 8px;
-    background: #2a2a2a;
+    background: black;
+    border: 3px solid #1a1a1a;
+    border-top: none;
     border-radius: 0 0 4px 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .logo-section {
@@ -616,22 +1003,154 @@
         gap: 40px;
     }
 
-    .iphone-svg {
+    .iphone-frame {
         width: 240px;
+        height: 500px;
     }
 
-    .macbook-svg {
+    .iphone-notch {
+        width: 100px;
+        height: 25px;
+    }
+
+    .iphone-screen {
+        border-radius: 28px;
+    }
+
+    .iphone-content {
+        border-radius: 30px;
+        padding: 16px;
+        padding-top: 40px;
+        margin: 0 6px 6px 6px;
+    }
+
+    .iphone-header h3 {
+        font-size: 16px;
+    }
+
+    .iphone-header p {
+        font-size: 10px;
+    }
+
+    .mock-logo span {
+        font-size: 28px;
+    }
+
+    .mock-logo h4 {
+        font-size: 12px;
+    }
+
+    .feature-item {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    .feature-item span:first-child {
+        font-size: 12px;
+    }
+
+    .mock-status {
+        padding: 10px;
+        font-size: 10px;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .macbook-frame {
         width: 350px;
+        height: 200px;
     }
 
-    .iphone-screen-content {
-        width: 180px;
-        height: 300px;
+    .macbook-notch {
+        width: 50px;
+        height: 6px;
     }
 
-    .macbook-screen-content {
-        width: 280px;
+    .macbook-content {
+        width: 320px;
         height: 160px;
+    }
+
+    .macbook-menu-bar {
+        padding: 6px 12px;
+        font-size: 10px;
+    }
+
+    .menu-left {
+        gap: 6px;
+    }
+
+    .apple-logo {
+        font-size: 12px;
+    }
+
+    .menu-center {
+        gap: 16px;
+    }
+
+    .control-buttons {
+        gap: 4px;
+    }
+
+    .control-btn {
+        width: 10px;
+        height: 10px;
+    }
+
+    .macbook-body {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .mock-dashboard {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .dashboard-header h4 {
+        font-size: 14px;
+    }
+
+    .version {
+        font-size: 10px;
+    }
+
+    .dashboard-stats {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 8px;
+        gap: 6px;
+    }
+
+    .stat-icon {
+        font-size: 16px;
+    }
+
+    .stat-number {
+        font-size: 14px;
+    }
+
+    .stat-label {
+        font-size: 9px;
+    }
+
+    .mock-chart {
+        gap: 6px;
+        height: 40px;
+    }
+
+    .chart-bar {
+        min-height: 15px;
+    }
+
+    .macbook-base {
+        width: 400px;
+        height: 6px;
     }
 }
 
@@ -644,24 +1163,184 @@
         gap: 30px;
     }
 
-    .iphone-svg {
+    .iphone-frame {
         width: 200px;
+        height: 450px;
     }
 
-    .macbook-svg {
+    .iphone-notch {
+        width: 80px;
+        height: 20px;
+    }
+
+    .iphone-screen {
+        border-radius: 24px;
+    }
+
+    .iphone-content {
+        border-radius: 28px;
+        padding: 14px;
+        padding-top: 35px;
+        margin: 0 5px 5px 5px;
+    }
+
+    .iphone-header h3 {
+        font-size: 14px;
+    }
+
+    .iphone-header p {
+        font-size: 10px;
+    }
+
+    .mock-logo span {
+        font-size: 24px;
+    }
+
+    .mock-logo h4 {
+        font-size: 12px;
+    }
+
+    .feature-item {
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+
+    .feature-item span:first-child {
+        font-size: 12px;
+    }
+
+    .mock-status {
+        padding: 10px;
+        font-size: 10px;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .macbook-frame {
         width: 300px;
+        height: 180px;
     }
 
-    .iphone-screen-content {
-        width: 160px;
-        height: 250px;
-        padding: 16px;
+    .macbook-notch {
+        width: 40px;
+        height: 6px;
     }
 
-    .macbook-screen-content {
-        width: 240px;
+    .macbook-content {
+        width: 280px;
         height: 140px;
-        padding: 12px;
+    }
+
+    .macbook-menu-bar {
+        padding: 6px 12px;
+        font-size: 10px;
+    }
+
+    .menu-left {
+        gap: 6px;
+    }
+
+    .apple-logo {
+        font-size: 12px;
+    }
+
+    .menu-center {
+        gap: 16px;
+    }
+
+    .control-buttons {
+        gap: 4px;
+    }
+
+    .control-btn {
+        width: 10px;
+        height: 10px;
+    }
+
+    .macbook-body {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .mock-dashboard {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .dashboard-header h4 {
+        font-size: 14px;
+    }
+
+    .version {
+        font-size: 10px;
+    }
+
+    .dashboard-stats {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 8px;
+        gap: 6px;
+    }
+
+    .stat-icon {
+        font-size: 16px;
+    }
+
+    .stat-number {
+        font-size: 14px;
+    }
+
+    .stat-label {
+        font-size: 9px;
+    }
+
+    .mock-chart {
+        gap: 6px;
+        height: 40px;
+    }
+
+    .chart-bar {
+        min-height: 15px;
+    }
+
+    .macbook-base {
+        width: 350px;
+        height: 6px;
+    }
+
+    .low-battery-content h4 {
+        font-size: 14px;
+    }
+
+    .low-battery-content p {
+        font-size: 11px;
+    }
+
+    .connect-charge-btn {
+        padding: 8px 16px;
+        font-size: 11px;
+    }
+
+    .charging-content h4 {
+        font-size: 14px;
+    }
+
+    .charging-content p {
+        font-size: 11px;
+    }
+
+    .lightning-bolt {
+        font-size: 32px;
+    }
+
+    .charging-pulse {
+        width: 50px;
+        height: 50px;
     }
 }
 
