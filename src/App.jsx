@@ -19,7 +19,7 @@ function AppContent() {
     const path = location.pathname;
 
     // Exact matches
-    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/services', '/create-own-portal', '/login', '/reset' ];
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules','/creating-portal', '/services','/reset' ];
     if (exactRoutes.includes(path)) return true;
 
     // Policy routes - check if the path matches any policy name
@@ -42,7 +42,7 @@ function AppContent() {
   // Check if current route should hide header and footer
   const shouldHideCommonComponents = () => {
     const path = location.pathname;
-    return path === '/login';
+    return path === '/login' || path === '/creating-portal';
   };
 
   const isNotFoundPage = !isValidRoute();
