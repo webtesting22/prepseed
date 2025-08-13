@@ -1,124 +1,61 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import ColorThief from "colorthief";
-
-// Get API base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const LogoUploadContainer = () => {
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [brandName, setBrandName] = useState("");
-  const [extractedColors, setExtractedColors] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const {
+    logoFile,
+    logoPreview,
+    brandName,
+    setBrandName,
+    extractedColors,
+    setExtractedColors,
+    selectedColors,
+    logoUploading: isUploading,
+    logoUploadError: uploadError,
+    logoUploadSuccess: saveSuccess,
+    uploadLogoToS3,
+    handleLogoFileSelect,
+    removeLogo,
+    handleColorSelect,
+    isColorSelected,
+  } = useContext(DynamicPortalContext);
+
   const fileInputRef = useRef(null);
 
-  // Function to upload logo to API
-  const uploadLogoToAPI = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append("logo", file);
-      formData.append("brandName", brandName);
-
-      const response = await fetch(`${API_BASE_URL}/upload-logo`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error("Error uploading logo:", error);
-      throw error;
-    }
-  };
-
-  // Function to save brand data to API
-  const saveBrandData = async () => {
-    if (!brandName.trim()) {
-      setUploadError("Please enter a brand name");
-      return;
-    }
-
-    if (!logoFile) {
-      setUploadError("Please upload a logo");
-      return;
-    }
-
-    setIsSaving(true);
-    setUploadError("");
-    setSaveSuccess(false);
-
-    try {
-      // First upload the logo
-      const logoUploadResult = await uploadLogoToAPI(logoFile);
-
-      // Then save the complete brand data
-      const brandData = {
-        brandName: brandName.trim(),
-        logoUrl: logoUploadResult.logoUrl,
-        extractedColors,
-        selectedColors,
-        timestamp: new Date().toISOString(),
-      };
-
-      const response = await fetch(`${API_BASE_URL}/save-brand-data`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(brandData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setSaveSuccess(true);
-      console.log("Brand data saved successfully:", result);
-    } catch (error) {
-      console.error("Error saving brand data:", error);
-      setUploadError(`Failed to save brand data: ${error.message}`);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleFileSelect = (event) => {
+  const handleFileSelect = async (event) => {
     const file = event.target.files[0];
     if (file) {
       if (!file.type.startsWith("image/")) {
-        setUploadError("Please select a valid image file");
+        console.error("Please select a valid image file");
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        setUploadError("File size should be less than 5MB");
+        console.error("File size should be less than 5MB");
         return;
       }
 
-      setLogoFile(file);
-      setUploadError("");
+      // Handle file selection through context
+      handleLogoFileSelect(file);
 
+      // Extract colors from the image
       const reader = new FileReader();
       reader.onload = (e) => {
-        setLogoPreview(e.target.result);
         extractColorsFromImage(e.target.result);
       };
       reader.readAsDataURL(file);
+
+      // Upload to S3
+      try {
+        await uploadLogoToS3(file);
+      } catch (error) {
+        console.error("Failed to upload logo:", error);
+      }
     }
   };
 
   const extractColorsFromImage = (imageSrc) => {
-    setIsUploading(true);
     const img = new Image();
     img.crossOrigin = "Anonymous";
 
@@ -149,15 +86,11 @@ const LogoUploadContainer = () => {
         setExtractedColors(colorsWithHex);
       } catch (error) {
         console.error("Error extracting colors:", error);
-        setUploadError("Failed to extract colors from image");
-      } finally {
-        setIsUploading(false);
       }
     };
 
     img.onerror = () => {
-      setUploadError("Failed to load image for color extraction");
-      setIsUploading(false);
+      console.error("Failed to load image for color extraction");
     };
 
     img.src = imageSrc;
@@ -187,7 +120,7 @@ const LogoUploadContainer = () => {
     e.currentTarget.style.backgroundColor = "white";
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     e.currentTarget.style.borderColor = "#e2e8f0";
     e.currentTarget.style.backgroundColor = "white";
@@ -196,49 +129,31 @@ const LogoUploadContainer = () => {
     if (files.length > 0) {
       const file = files[0];
       if (file.type.startsWith("image/")) {
-        setLogoFile(file);
-        setUploadError("");
+        // Handle file selection through context
+        handleLogoFileSelect(file);
 
+        // Extract colors from the image
         const reader = new FileReader();
         reader.onload = (e) => {
-          setLogoPreview(e.target.result);
           extractColorsFromImage(e.target.result);
         };
         reader.readAsDataURL(file);
+
+        // Upload to S3
+        try {
+          await uploadLogoToS3(file);
+        } catch (error) {
+          console.error("Failed to upload logo:", error);
+        }
       } else {
-        setUploadError("Please drop a valid image file");
+        console.error("Please drop a valid image file");
       }
     }
   };
 
-  const handleColorSelect = (color, index) => {
-    setSelectedColors((prev) => {
-      const isAlreadySelected = prev.find((c) => c.hex === color.hex);
-
-      if (isAlreadySelected) {
-        // Remove color if already selected
-        return prev.filter((c) => c.hex !== color.hex);
-      } else if (prev.length < 2) {
-        // Add color if less than 2 are selected
-        return [...prev, { ...color, index }];
-      } else {
-        // Replace the first color if 2 are already selected
-        return [prev[1], { ...color, index }];
-      }
-    });
-  };
-
-  const isColorSelected = (color) => {
-    return selectedColors.some((c) => c.hex === color.hex);
-  };
-
-  const removeLogo = () => {
-    setLogoFile(null);
-    setLogoPreview(null);
-    setExtractedColors([]);
-    setSelectedColors([]);
-    setBrandName("");
-    setUploadError("");
+  // Clear file input when logo is removed
+  const handleRemoveLogo = () => {
+    removeLogo();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -371,7 +286,7 @@ const LogoUploadContainer = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeLogo();
+                  handleRemoveLogo();
                 }}
                 style={{
                   padding: "8px 16px",
@@ -417,22 +332,6 @@ const LogoUploadContainer = () => {
             }}
           >
             {uploadError}
-          </div>
-        )}
-
-        {saveSuccess && (
-          <div
-            style={{
-              marginTop: "12px",
-              padding: "12px",
-              background: "#f0fdf4",
-              border: "1px solid #bbf7d0",
-              borderRadius: "6px",
-              color: "#166534",
-              fontSize: "14px",
-            }}
-          >
-            ✅ Brand data saved successfully!
           </div>
         )}
 
@@ -708,60 +607,6 @@ const LogoUploadContainer = () => {
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Save Button */}
-      {logoFile && brandName.trim() && (
-        <div style={{ marginBottom: "32px" }}>
-          <button
-            onClick={saveBrandData}
-            disabled={isSaving}
-            style={{
-              width: "100%",
-              padding: "16px 24px",
-              background: isSaving ? "#94a3b8" : "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "16px",
-              fontWeight: "600",
-              cursor: isSaving ? "not-allowed" : "pointer",
-              transition: "background-color 0.2s",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-            }}
-            onMouseEnter={(e) => {
-              if (!isSaving) {
-                e.target.style.backgroundColor = "#2563eb";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isSaving) {
-                e.target.style.backgroundColor = "#3b82f6";
-              }
-            }}
-          >
-            {isSaving ? (
-              <>
-                <div
-                  style={{
-                    width: "16px",
-                    height: "16px",
-                    border: "2px solid #ffffff",
-                    borderTop: "2px solid transparent",
-                    borderRadius: "50%",
-                    animation: "spin 1s linear infinite",
-                  }}
-                ></div>
-                Saving Brand Data...
-              </>
-            ) : (
-              <>💾 Save Brand Data</>
-            )}
-          </button>
         </div>
       )}
 

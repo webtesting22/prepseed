@@ -22,6 +22,17 @@ const DynamicContextState = ({ children }) => {
   const [modulesLoading, setModulesLoading] = useState(true);
   const [modulesError, setModulesError] = useState("");
 
+  // Logo/Brand state
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [brandName, setBrandName] = useState("");
+  const [extractedColors, setExtractedColors] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoUploadError, setLogoUploadError] = useState("");
+  const [logoUploadSuccess, setLogoUploadSuccess] = useState(false);
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState("");
+
   const steps = [
     { id: 0, name: "Logo & Branding", component: "LogoUpload" },
     { id: 1, name: "Select Industry", component: "SelectIndustry" },
@@ -118,6 +129,127 @@ const DynamicContextState = ({ children }) => {
     });
   };
 
+  // Function to upload logo to S3 using upload policy
+  const uploadLogoToS3 = async (file) => {
+    try {
+      setLogoUploading(true);
+      setLogoUploadError("");
+      setLogoUploadSuccess(false);
+
+      const filename = file.name;
+      const mime = file.type.split("/")[1];
+
+      const requestBody = {
+        fileName: filename,
+        mime: mime,
+      };
+
+      // Get upload policy from API
+      const response = await fetch(`${API_BASE_URL}/chats/uploadPolicy`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Token ${window.localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Upload policy API failed: ${response.status} - ${errorText}`
+        );
+      }
+
+      const data = await response.json();
+
+      // Validate response structure
+      if (!data.data || !data.data.fields || !data.data.url) {
+        throw new Error("Invalid upload policy response structure");
+      }
+
+      // Create FormData for S3 upload
+      const formData = new FormData();
+      Object.entries(data.data.fields).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      formData.append("file", file);
+
+      // Construct final URL
+      const finalUrl = `${data.data.url}/${data.filePath}`;
+
+      // Upload to S3
+      const uploadResponse = await fetch(data.data.url, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (uploadResponse.ok) {
+        setUploadedLogoUrl(finalUrl);
+        setLogoUploadSuccess(true);
+        return finalUrl;
+      } else {
+        const errorText = await uploadResponse.text();
+        throw new Error(
+          `S3 upload failed: ${uploadResponse.status} - ${errorText}`
+        );
+      }
+    } catch (error) {
+      setLogoUploadError(`Failed to upload logo: ${error.message}`);
+      throw error;
+    } finally {
+      setLogoUploading(false);
+    }
+  };
+
+  // Function to handle logo file selection
+  const handleLogoFileSelect = (file) => {
+    setLogoFile(file);
+    setLogoUploadError("");
+    setLogoUploadSuccess(false);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setLogoPreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Function to remove logo
+  const removeLogo = () => {
+    setLogoFile(null);
+    setLogoPreview(null);
+    setExtractedColors([]);
+    setSelectedColors([]);
+    setLogoUploadError("");
+    setLogoUploadSuccess(false);
+    setUploadedLogoUrl("");
+  };
+
+  // Function to handle color selection
+  const handleColorSelect = (color, index) => {
+    setSelectedColors((prev) => {
+      const isAlreadySelected = prev.find((c) => c.hex === color.hex);
+
+      if (isAlreadySelected) {
+        // Remove color if already selected
+        return prev.filter((c) => c.hex !== color.hex);
+      } else if (prev.length < 2) {
+        // Add color if less than 2 are selected
+        return [...prev, { ...color, index }];
+      } else {
+        // Replace the first color if 2 are already selected
+        return [prev[1], { ...color, index }];
+      }
+    });
+  };
+
+  // Function to check if color is selected
+  const isColorSelected = (color) => {
+    return selectedColors.some((c) => c.hex === color.hex);
+  };
+
   // Clear selected modules when industry changes
   useEffect(() => {
     if (selectedIndustry) {
@@ -181,6 +313,23 @@ const DynamicContextState = ({ children }) => {
         handleModuleToggle,
         isModuleSelected,
         getFilteredModules,
+        // Logo/Brand
+        logoFile,
+        logoPreview,
+        brandName,
+        setBrandName,
+        extractedColors,
+        setExtractedColors,
+        selectedColors,
+        logoUploading,
+        logoUploadError,
+        logoUploadSuccess,
+        uploadedLogoUrl,
+        uploadLogoToS3,
+        handleLogoFileSelect,
+        removeLogo,
+        handleColorSelect,
+        isColorSelected,
       }}
     >
       {children}
