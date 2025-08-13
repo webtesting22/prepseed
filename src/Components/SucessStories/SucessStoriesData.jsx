@@ -4,7 +4,7 @@ const SucessStoriesData = [
         title: "Harshit Mawandia",
         image: "https://static-prepseed.s3.ap-south-1.amazonaws.com/reviewers/Harshit Mawandia AIR 382.jpg",
         postition: "IIT Delhi",
-        description: "Throughout the lockdown period, Prepseed enabled me to maintain my JEE preparation momentum through regular Live assessments covering both Mains and Advanced patterns, featuring an excellent and user-friendly interface. The platform also offered Chapter-specific evaluations that were excellent for concept reinforcement and a dynamic ranking system that kept me engaged in healthy competition.",
+        description: "We’ve seen a huge improvement in communication. Teachers, parents, and students are now always connected. Reports are clear and easy to generate anytime. Our daily tasks take much less time to complete. Prepseed truly streamlines school management.",
     },
     {
         id: 2,
@@ -18,7 +18,7 @@ const SucessStoriesData = [
         title: "Dhananjay Kejriwal",
         image: "https://static-prepseed.s3.ap-south-1.amazonaws.com/reviewers/dhananjay-kejriwal.jpg",
         postition: "IIT Bombay",
-        description: "Prepseed as an examination platform significantly aided me and my classmates during our practice sessions, any questions or uncertainties can be addressed within the system and we utilized it extensively, and furthermore if any modifications needed to be made, they were promptly corrected, additionally there is a ranking board which continuously keeps me informed about my standing. I would like to particularly highlight the consistent assistance of Ankit Bhaiya.",
+        description: "Prepseed has made managing our school so much easier. From attendance to assignments, everything is well-organized. The interface is simple, and our staff learned it quickly. Parents love the instant updates and notifications. It’s a complete solution for modern school needs.",
     },
     {
         id: 4,
@@ -33,14 +33,14 @@ const SucessStoriesData = [
         title: "Arun Dubey",
         image: "https://static-prepseed.s3.ap-south-1.amazonaws.com/reviewers/arun dubey mkway.jpg",
         postition: "Director, MkWay",
-        description: "This platform contains all the capabilities that can assist students in comprehensive development. Features such as practice questions, test evaluation, subject-wise analysis, accessibility of various question formats and complete syllabus assessments have supported the students in achieving JEE success. The prompt feedback from the team and their assistance has been exceptional thus far.",
+        description: "We were struggling with scattered school processes before. Prepseed brought everything together in one system. Our team loves how easy it is to navigate. The support team is always quick to help when needed. It’s the best investment we made for our school.",
     },
     {
         id: 6,
         title: "Margav Savsani",
         image: "https://static-prepseed.s3.ap-south-1.amazonaws.com/reviewers/Margav Savsani.jpg",
         postition: "IIT Bombay",
-        description: "Prepseed greatly assisted me in my preparation during the lockdown. The testing platform includes numerous outstanding features such as displaying the time you spend and the average time taken by all participants, which enabled me to compare my pace with other students.",
+        description: "Tracking student progress is now effortless and quick. The dashboard shows all important data at a glance. Assignments and homework are shared instantly with parents. We can manage multiple branches from one platform. Prepseed keeps our school connected and efficient.",
     },
 
 ];
