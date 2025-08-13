@@ -1,6 +1,9 @@
 import React, { useState, useRef } from "react";
 import ColorThief from "colorthief";
 
+// Get API base URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const LogoUploadContainer = () => {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
@@ -9,7 +12,85 @@ const LogoUploadContainer = () => {
   const [selectedColors, setSelectedColors] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Function to upload logo to API
+  const uploadLogoToAPI = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+      formData.append("brandName", brandName);
+
+      const response = await fetch(`${API_BASE_URL}/upload-logo`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("Error uploading logo:", error);
+      throw error;
+    }
+  };
+
+  // Function to save brand data to API
+  const saveBrandData = async () => {
+    if (!brandName.trim()) {
+      setUploadError("Please enter a brand name");
+      return;
+    }
+
+    if (!logoFile) {
+      setUploadError("Please upload a logo");
+      return;
+    }
+
+    setIsSaving(true);
+    setUploadError("");
+    setSaveSuccess(false);
+
+    try {
+      // First upload the logo
+      const logoUploadResult = await uploadLogoToAPI(logoFile);
+
+      // Then save the complete brand data
+      const brandData = {
+        brandName: brandName.trim(),
+        logoUrl: logoUploadResult.logoUrl,
+        extractedColors,
+        selectedColors,
+        timestamp: new Date().toISOString(),
+      };
+
+      const response = await fetch(`${API_BASE_URL}/save-brand-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(brandData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setSaveSuccess(true);
+      console.log("Brand data saved successfully:", result);
+    } catch (error) {
+      console.error("Error saving brand data:", error);
+      setUploadError(`Failed to save brand data: ${error.message}`);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -339,6 +420,22 @@ const LogoUploadContainer = () => {
           </div>
         )}
 
+        {saveSuccess && (
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "12px",
+              background: "#f0fdf4",
+              border: "1px solid #bbf7d0",
+              borderRadius: "6px",
+              color: "#166534",
+              fontSize: "14px",
+            }}
+          >
+            ✅ Brand data saved successfully!
+          </div>
+        )}
+
         {isUploading && (
           <div
             style={{
@@ -611,6 +708,60 @@ const LogoUploadContainer = () => {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Save Button */}
+      {logoFile && brandName.trim() && (
+        <div style={{ marginBottom: "32px" }}>
+          <button
+            onClick={saveBrandData}
+            disabled={isSaving}
+            style={{
+              width: "100%",
+              padding: "16px 24px",
+              background: isSaving ? "#94a3b8" : "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              fontSize: "16px",
+              fontWeight: "600",
+              cursor: isSaving ? "not-allowed" : "pointer",
+              transition: "background-color 0.2s",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}
+            onMouseEnter={(e) => {
+              if (!isSaving) {
+                e.target.style.backgroundColor = "#2563eb";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isSaving) {
+                e.target.style.backgroundColor = "#3b82f6";
+              }
+            }}
+          >
+            {isSaving ? (
+              <>
+                <div
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    border: "2px solid #ffffff",
+                    borderTop: "2px solid transparent",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                  }}
+                ></div>
+                Saving Brand Data...
+              </>
+            ) : (
+              <>💾 Save Brand Data</>
+            )}
+          </button>
         </div>
       )}
 
