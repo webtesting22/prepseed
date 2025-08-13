@@ -1,62 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-// Get API base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import React, { useContext } from "react";
+import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const SelectModulesContainer = () => {
-  const [modules, setModules] = useState([]);
-  const [selectedModules, setSelectedModules] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // Function to fetch modules from API
-  const fetchModules = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await axios.get(`${API_BASE_URL}/modules`);
-
-      if (response.data.success && response.data.data) {
-        // Filter only active modules and sort by order
-        const activeModules = response.data.data
-          .filter((module) => module.isActive)
-          .sort((a, b) => a.order - b.order);
-
-        setModules(activeModules);
-      } else {
-        throw new Error("Invalid API response format");
-      }
-    } catch (error) {
-      console.error("Error fetching modules:", error);
-      setError(`Failed to load modules: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchModules();
-  }, []);
-
-  // Function to handle module selection
-  const handleModuleToggle = (moduleId) => {
-    setSelectedModules((prev) => {
-      if (prev.includes(moduleId)) {
-        // Remove module if already selected
-        return prev.filter((id) => id !== moduleId);
-      } else {
-        // Add module if not selected
-        return [...prev, moduleId];
-      }
-    });
-  };
-
-  // Function to check if module is selected
-  const isModuleSelected = (moduleId) => {
-    return selectedModules.includes(moduleId);
-  };
+  const {
+    modules,
+    selectedModules,
+    modulesLoading: loading,
+    modulesError: error,
+    fetchModules,
+    handleModuleToggle,
+    isModuleSelected,
+  } = useContext(DynamicPortalContext);
 
   return (
     <div className="step-content">

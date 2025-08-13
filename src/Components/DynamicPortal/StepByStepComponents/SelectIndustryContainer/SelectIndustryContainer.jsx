@@ -1,51 +1,15 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-// Get API base URL from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import React, { useContext } from "react";
+import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const SelectIndustryContainer = () => {
-  const [industries, setIndustries] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [selectedIndustry, setSelectedIndustry] = useState(null);
-
-  // Function to fetch industries from API
-  const fetchIndustries = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await axios.get(`${API_BASE_URL}/industry`);
-
-      if (response.data.success && response.data.data) {
-        // Filter only active industries and sort by order
-        const activeIndustries = response.data.data
-          .filter((industry) => industry.isActive)
-          .sort((a, b) => a.order - b.order);
-
-        setIndustries(activeIndustries);
-      } else {
-        throw new Error("Invalid API response format");
-      }
-    } catch (error) {
-      console.error("Error fetching industries:", error);
-      setError(`Failed to load industries: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchIndustries();
-  }, []);
-
-  // Function to handle industry selection
-  const handleIndustrySelect = (industry) => {
-    setSelectedIndustry(industry);
-    // Here you can add logic to save the selection or pass it to parent component
-    console.log("Selected industry:", industry);
-  };
+  const {
+    industries,
+    selectedIndustry,
+    industriesLoading: loading,
+    industriesError: error,
+    fetchIndustries,
+    handleIndustrySelect,
+  } = useContext(DynamicPortalContext);
 
   return (
     <div className="step-content">
