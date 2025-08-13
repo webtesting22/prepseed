@@ -5,12 +5,17 @@ const SelectModulesContainer = () => {
   const {
     modules,
     selectedModules,
+    selectedIndustry,
     modulesLoading: loading,
     modulesError: error,
     fetchModules,
     handleModuleToggle,
     isModuleSelected,
+    getFilteredModules,
   } = useContext(DynamicPortalContext);
+
+  // Get filtered modules based on selected industry
+  const filteredModules = getFilteredModules();
 
   return (
     <div className="step-content">
@@ -32,8 +37,9 @@ const SelectModulesContainer = () => {
           marginBottom: "32px",
         }}
       >
-        Choose the modules and features you need for your portal. You can always
-        add more later.
+        {selectedIndustry
+          ? `Choose the modules and features you need for your ${selectedIndustry.name.toLowerCase()} portal. You can always add more later.`
+          : "Choose the modules and features you need for your portal. You can always add more later."}
       </p>
 
       {/* Loading State */}
@@ -104,8 +110,30 @@ const SelectModulesContainer = () => {
         </div>
       )}
 
+      {/* No Industry Selected Message */}
+      {!loading && !error && !selectedIndustry && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "40px",
+            color: "#64748b",
+          }}
+        >
+          <div style={{ fontSize: "48px", marginBottom: "16px" }}>🏢</div>
+          <h3
+            style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}
+          >
+            Select an Industry First
+          </h3>
+          <p style={{ fontSize: "14px", marginBottom: "16px" }}>
+            Please go back and select an industry to see available modules for
+            that industry.
+          </p>
+        </div>
+      )}
+
       {/* Modules Grid */}
-      {!loading && !error && modules.length > 0 && (
+      {!loading && !error && selectedIndustry && filteredModules.length > 0 && (
         <div
           style={{
             display: "grid",
@@ -113,7 +141,7 @@ const SelectModulesContainer = () => {
             gap: "16px",
           }}
         >
-          {modules.map((module) => (
+          {filteredModules.map((module) => (
             <div
               key={module._id}
               onClick={() => handleModuleToggle(module._id)}
@@ -280,40 +308,48 @@ const SelectModulesContainer = () => {
         </div>
       )}
 
-      {/* Empty State */}
-      {!loading && !error && modules.length === 0 && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "40px",
-            color: "#64748b",
-          }}
-        >
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>📦</div>
-          <h3
-            style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}
-          >
-            No Modules Available
-          </h3>
-          <p style={{ fontSize: "14px", marginBottom: "16px" }}>
-            No active modules found. Please try again later.
-          </p>
-          <button
-            onClick={fetchModules}
+      {/* Empty State - No modules for selected industry */}
+      {!loading &&
+        !error &&
+        selectedIndustry &&
+        filteredModules.length === 0 && (
+          <div
             style={{
-              padding: "8px 16px",
-              background: "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "14px",
-              cursor: "pointer",
+              textAlign: "center",
+              padding: "40px",
+              color: "#64748b",
             }}
           >
-            Refresh
-          </button>
-        </div>
-      )}
+            <div style={{ fontSize: "48px", marginBottom: "16px" }}>📦</div>
+            <h3
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                marginBottom: "8px",
+              }}
+            >
+              No Modules Available for {selectedIndustry?.name}
+            </h3>
+            <p style={{ fontSize: "14px", marginBottom: "16px" }}>
+              No modules found for the selected industry. Please try selecting a
+              different industry.
+            </p>
+            <button
+              onClick={fetchModules}
+              style={{
+                padding: "8px 16px",
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "14px",
+                cursor: "pointer",
+              }}
+            >
+              Refresh
+            </button>
+          </div>
+        )}
 
       {/* Selected Modules Summary */}
       {selectedModules.length > 0 && (
@@ -346,7 +382,7 @@ const SelectModulesContainer = () => {
               gap: "8px",
             }}
           >
-            {modules
+            {filteredModules
               .filter((module) => selectedModules.includes(module._id))
               .map((module) => (
                 <div

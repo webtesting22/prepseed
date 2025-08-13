@@ -84,7 +84,6 @@ const DynamicContextState = ({ children }) => {
   // Function to handle industry selection
   const handleIndustrySelect = (industry) => {
     setSelectedIndustry(industry);
-    console.log("Selected industry:", industry);
   };
 
   // Function to handle module selection
@@ -104,6 +103,28 @@ const DynamicContextState = ({ children }) => {
   const isModuleSelected = (moduleId) => {
     return selectedModules.includes(moduleId);
   };
+
+  // Function to get filtered modules based on selected industry
+  const getFilteredModules = () => {
+    if (!selectedIndustry) {
+      return []; // Return empty array if no industry is selected
+    }
+
+    return modules.filter((module) => {
+      // Check if the module's industries array contains the selected industry
+      return module.industries.some(
+        (industry) => industry._id === selectedIndustry._id
+      );
+    });
+  };
+
+  // Clear selected modules when industry changes
+  useEffect(() => {
+    if (selectedIndustry) {
+      // Clear previously selected modules when industry changes
+      setSelectedModules([]);
+    }
+  }, [selectedIndustry]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -159,6 +180,7 @@ const DynamicContextState = ({ children }) => {
         fetchModules,
         handleModuleToggle,
         isModuleSelected,
+        getFilteredModules,
       }}
     >
       {children}
