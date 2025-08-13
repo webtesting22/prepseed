@@ -22,7 +22,7 @@ const SucessStoriesData = [
     },
     {
         id: 4,
-        title: "CSS Sir",
+        title: "Chandrasekhar",
         image: "https://static-prepseed.s3.ap-south-1.amazonaws.com/reviewers/css sir reliablekota.jpg",
         postition: "HOD, Physics Reliable",
         description: "Prepseed is an excellent platform developed by my students who themselves achieved outstanding JEE results and utilized every detailed aspect of AI-powered learning in the portal. The customized analytics, Revision simulations and Learning Pathways are among the features I appreciated most, and are extremely beneficial for the students. The test administration is seamless and their support is truly rapid. The portal is highly adaptable and an ideal match for coaching. Delighted to recommend it to others.",
