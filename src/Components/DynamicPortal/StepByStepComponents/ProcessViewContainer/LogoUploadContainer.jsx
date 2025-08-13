@@ -1,43 +1,61 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import ColorThief from "colorthief";
+import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const LogoUploadContainer = () => {
-  const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [brandName, setBrandName] = useState("");
-  const [extractedColors, setExtractedColors] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
+  const {
+    logoFile,
+    logoPreview,
+    brandName,
+    setBrandName,
+    extractedColors,
+    setExtractedColors,
+    selectedColors,
+    logoUploading: isUploading,
+    logoUploadError: uploadError,
+    logoUploadSuccess: saveSuccess,
+    uploadLogoToS3,
+    handleLogoFileSelect,
+    removeLogo,
+    handleColorSelect,
+    isColorSelected,
+  } = useContext(DynamicPortalContext);
+
   const fileInputRef = useRef(null);
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = async (event) => {
     const file = event.target.files[0];
     if (file) {
       if (!file.type.startsWith("image/")) {
-        setUploadError("Please select a valid image file");
+        console.error("Please select a valid image file");
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        setUploadError("File size should be less than 5MB");
+        console.error("File size should be less than 5MB");
         return;
       }
 
-      setLogoFile(file);
-      setUploadError("");
+      // Handle file selection through context
+      handleLogoFileSelect(file);
 
+      // Extract colors from the image
       const reader = new FileReader();
       reader.onload = (e) => {
-        setLogoPreview(e.target.result);
         extractColorsFromImage(e.target.result);
       };
       reader.readAsDataURL(file);
+
+      // Upload to S3
+      try {
+        await uploadLogoToS3(file);
+      } catch (error) {
+        console.error("Failed to upload logo:", error);
+      }
     }
   };
 
   const extractColorsFromImage = (imageSrc) => {
-    setIsUploading(true);
     const img = new Image();
     img.crossOrigin = "Anonymous";
 
@@ -68,15 +86,11 @@ const LogoUploadContainer = () => {
         setExtractedColors(colorsWithHex);
       } catch (error) {
         console.error("Error extracting colors:", error);
-        setUploadError("Failed to extract colors from image");
-      } finally {
-        setIsUploading(false);
       }
     };
 
     img.onerror = () => {
-      setUploadError("Failed to load image for color extraction");
-      setIsUploading(false);
+      console.error("Failed to load image for color extraction");
     };
 
     img.src = imageSrc;
@@ -106,7 +120,7 @@ const LogoUploadContainer = () => {
     e.currentTarget.style.backgroundColor = "white";
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     e.currentTarget.style.borderColor = "#e2e8f0";
     e.currentTarget.style.backgroundColor = "white";
@@ -115,49 +129,31 @@ const LogoUploadContainer = () => {
     if (files.length > 0) {
       const file = files[0];
       if (file.type.startsWith("image/")) {
-        setLogoFile(file);
-        setUploadError("");
+        // Handle file selection through context
+        handleLogoFileSelect(file);
 
+        // Extract colors from the image
         const reader = new FileReader();
         reader.onload = (e) => {
-          setLogoPreview(e.target.result);
           extractColorsFromImage(e.target.result);
         };
         reader.readAsDataURL(file);
+
+        // Upload to S3
+        try {
+          await uploadLogoToS3(file);
+        } catch (error) {
+          console.error("Failed to upload logo:", error);
+        }
       } else {
-        setUploadError("Please drop a valid image file");
+        console.error("Please drop a valid image file");
       }
     }
   };
 
-  const handleColorSelect = (color, index) => {
-    setSelectedColors((prev) => {
-      const isAlreadySelected = prev.find((c) => c.hex === color.hex);
-
-      if (isAlreadySelected) {
-        // Remove color if already selected
-        return prev.filter((c) => c.hex !== color.hex);
-      } else if (prev.length < 2) {
-        // Add color if less than 2 are selected
-        return [...prev, { ...color, index }];
-      } else {
-        // Replace the first color if 2 are already selected
-        return [prev[1], { ...color, index }];
-      }
-    });
-  };
-
-  const isColorSelected = (color) => {
-    return selectedColors.some((c) => c.hex === color.hex);
-  };
-
-  const removeLogo = () => {
-    setLogoFile(null);
-    setLogoPreview(null);
-    setExtractedColors([]);
-    setSelectedColors([]);
-    setBrandName("");
-    setUploadError("");
+  // Clear file input when logo is removed
+  const handleRemoveLogo = () => {
+    removeLogo();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -290,7 +286,7 @@ const LogoUploadContainer = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeLogo();
+                  handleRemoveLogo();
                 }}
                 style={{
                   padding: "8px 16px",
