@@ -35,7 +35,7 @@ const ProcessViewContainer = () => {
                 }
                 return 0;
             });
-        }, 10000); // 10 seconds for smoother animation
+        }, 3000); // 10 seconds for smoother animation
 
         // Simulate user activity (random drain rate changes)
         const activityInterval = setInterval(() => {
@@ -70,7 +70,7 @@ const ProcessViewContainer = () => {
                 setTimeout(() => {
                     setShowCharging(false);
                     setIsCharging(false);
-                    setBatteryLevel(100);
+                    setBatteryLevel(50);
                     setDrainRate(1); // Reset drain rate
                 }, 500);
             }
