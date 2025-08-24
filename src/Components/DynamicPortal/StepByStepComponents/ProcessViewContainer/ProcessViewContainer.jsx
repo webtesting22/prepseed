@@ -4,6 +4,8 @@ import SelectIndustryContainer from "../SelectIndustryContainer/SelectIndustryCo
 import SelectModulesContainer from "../SelectModulesContainer/SelectModulesContainer";
 import IdentityContainer from "../IdentityContainer/IdentityContainer";
 import LogoUploadContainer from "./LogoUploadContainer";
+import Portal from "../Portal/Portal";
+// import DynamicPreview from "./DynamicPreview";
 import "./ProcessViewContainer.css";
 import { FaWifi, FaBolt, FaTimes } from "react-icons/fa";
 
@@ -59,7 +61,7 @@ const ProcessViewContainer = () => {
         setIsCharging(true);
         setShowCharging(true);
         setShowLowBattery(false);
-        
+
         // Animated charging effect
         let chargeLevel = batteryLevel;
         const chargeInterval = setInterval(() => {
@@ -191,181 +193,10 @@ const ProcessViewContainer = () => {
                     </div>
                 </div>
             </div>
-
-            <div className="main-content-empty">
-                <div className="mockups-container">
-                    <div className="iphone-mockup">
-                        <div className="iphone-frame">
-                            <div className="iphone-notch"></div>
-                            <div className="iphone-screen">
-                                <div className="iphone-status-bar">
-                                    <div className="status-left">
-                                        <span className="time">9:41</span>
-                                    </div>
-                                    <div className="dynamic-island">
-                                        <div className="island-camera"></div>
-                                        <div className="island-speaker"></div>
-                                    </div>
-                                    <div className="status-right">
-                                        <div className="signal-bars">
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
-                                        </div>
-                                        <div className="wifi-icon">
-                                            <FaWifi />
-                                        </div>
-                                        <div className="battery">
-                                            <div
-                                                className={`battery-level ${batteryLevel <= 20 ? 'low' : ''} ${isActive ? 'active' : ''}`}
-                                                style={{ 
-                                                    backgroundColor: getBatteryColor(batteryLevel),
-                                                    width: `${(batteryLevel / 100) * 18}px`
-                                                }}
-                                            >
-                                                <span>{getBatteryIcon(batteryLevel)}</span>
-                                            </div>
-                                            <span className="battery-percentage">{batteryLevel.toFixed(1)}%</span>
-                                            {isActive && (
-                                                <span className="drain-indicator" title={`Drain rate: ${drainRate.toFixed(1)}x`}>
-                                                    ⚡
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="iphone-content">
-                                    <div className="iphone-header">
-                                        <h3>Mobile Preview</h3>
-                                        <p>iPhone 15 Pro Max</p>
-                                    </div>
-                                    <div className="iphone-body">
-                                        <div className="mock-logo">
-                                            <span>🎨</span>
-                                            <h4>Brand Logo</h4>
-                                        </div>
-                                        <div className="mock-features">
-                                            <div className="feature-item">
-                                                <span>✨</span>
-                                                <span>Responsive Design</span>
-                                            </div>
-                                            <div className="feature-item">
-                                                <span>📱</span>
-                                                <span>Mobile Optimized</span>
-                                            </div>
-                                            <div className="feature-item">
-                                                <span>🎯</span>
-                                                <span>Touch Friendly</span>
-                                            </div>
-                                        </div>
-                                        <div className="mock-status">
-                                            <span className="status-dot active"></span>
-                                            <span>Mobile Ready</span>
-                                            <span className="battery-status">
-                                                {isActive ? `⚡ ${drainRate.toFixed(1)}x` : '💤 Idle'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Low Battery Warning Overlay */}
-                                {showLowBattery && (
-                                    <div className="low-battery-overlay">
-                                        <div className="low-battery-content">
-                                            <div className="battery-warning-icon">🔋</div>
-                                            <h4>Low Battery</h4>
-                                            <p>Battery level: {batteryLevel}%</p>
-                                            <button
-                                                className="connect-charge-btn"
-                                                onClick={handleConnectCharge}
-                                            >
-                                                <FaBolt /> Connect to Charge
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Charging Overlay */}
-                                {showCharging && (
-                                    <div className="charging-overlay">
-                                        <div className="charging-content">
-                                            <div className="charging-animation">
-                                                <FaBolt className="lightning-bolt" />
-                                                <div className="charging-pulse"></div>
-                                            </div>
-                                            <h4>Charging...</h4>
-                                            <p>Battery level: {batteryLevel}%</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="macbook-mockup">
-                        <div className="macbook-frame">
-                            <div className="macbook-screen">
-                                <div className="macbook-notch"></div>
-                                <div className="macbook-content">
-                                    <div className="macbook-menu-bar">
-                                        <div className="menu-left">
-                                            <span className="apple-logo">🍎</span>
-                                            <span>PrepSeed Portal</span>
-                                        </div>
-                                        <div className="menu-center">
-                                            <span>File</span>
-                                            <span>Edit</span>
-                                            <span>View</span>
-                                            <span>Window</span>
-                                            <span>Help</span>
-                                        </div>
-                                        <div className="menu-right">
-                                            <div className="control-buttons">
-                                                <span className="control-btn close"></span>
-                                                <span className="control-btn minimize"></span>
-                                                <span className="control-btn maximize"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="macbook-body">
-                                        <div className="mock-dashboard">
-                                            <div className="dashboard-header">
-                                                <h4>Portal Dashboard</h4>
-                                                <span className="version">v2.1</span>
-                                            </div>
-                                            <div className="dashboard-stats">
-                                                <div className="stat-card">
-                                                    <span className="stat-icon">📊</span>
-                                                    <div className="stat-info">
-                                                        <span className="stat-number">1,247</span>
-                                                        <span className="stat-label">Users</span>
-                                                    </div>
-                                                </div>
-                                                <div className="stat-card">
-                                                    <span className="stat-icon">🚀</span>
-                                                    <div className="stat-info">
-                                                        <span className="stat-number">89%</span>
-                                                        <span className="stat-label">Uptime</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mock-chart">
-                                                <div className="chart-bar" style={{ height: '60%' }}></div>
-                                                <div className="chart-bar" style={{ height: '80%' }}></div>
-                                                <div className="chart-bar" style={{ height: '45%' }}></div>
-                                                <div className="chart-bar" style={{ height: '95%' }}></div>
-                                                <div className="chart-bar" style={{ height: '70%' }}></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="macbook-base"></div>
-                        </div>
-                    </div>
-                </div>
+            <div className="PortalPreviewContainers">
+                <Portal />
             </div>
+
         </div>
     );
 };

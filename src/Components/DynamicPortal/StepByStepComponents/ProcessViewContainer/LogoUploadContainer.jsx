@@ -385,7 +385,7 @@ const LogoUploadContainer = () => {
           value={brandName}
           onChange={(e) => setBrandName(e.target.value)}
           style={{
-            width: "100%",
+            width: "90%",
             padding: "16px",
             border: "1px solid #d1d5db",
             borderRadius: "8px",
