@@ -19,7 +19,7 @@ function AppContent() {
     const path = location.pathname;
 
     // Exact matches
-    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/creating-portal', '/services', '/reset', '/portal'  ];
+    const exactRoutes = ['/', '/about', '/our-clients', '/modules', '/creating-portal', '/services', '/reset', '/portal'];
     if (exactRoutes.includes(path)) return true;
 
     // Policy routes - check if the path matches any policy name
@@ -55,7 +55,7 @@ function AppContent() {
       {/* {!isNotFoundPage && !hideComponents && <ProvideApp />} */}
       {!isNotFoundPage && !hideComponents && <Footer />}
       {!isNotFoundPage && !hideComponents && <BluryLineBottom />}
-      <Flowbtn />
+      {!isNotFoundPage && !hideComponents && <Flowbtn />}
     </>
   );
 }

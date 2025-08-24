@@ -1,0 +1,252 @@
+.preview-details-container {
+  max-width: 600px;
+  /* margin: 20px auto; */
+  padding: 20px;
+}
+
+.candidate-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  background: #fff;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.candidate-avatar {
+  border: 3px solid #4CAF50;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+}
+
+.candidate-basic-info {
+  flex: 1;
+}
+
+.candidate-name {
+  margin: 0 0 8px 0 !important;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.location-info {
+  color: #7f8c8d;
+}
+
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.setup-progress {
+  margin-top: 8px;
+}
+
+.industry-section {
+  margin-bottom: 20px;
+}
+
+.industry-info {
+  margin-top: 12px;
+}
+
+.industry-tag {
+  margin-bottom: 8px;
+}
+
+.industry-desc {
+  display: block;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.modules-section {
+  margin-bottom: 20px;
+}
+
+.modules-tags {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.module-tag {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.more-modules-tag {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.setup-timeline-section {
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px 8px;
+}
+
+.stat-item .ant-typography {
+  margin: 0;
+}
+
+.stat-value {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #2c3e50 !important;
+  margin: 4px 0 0 0 !important;
+}
+
+.description-section {
+  margin-bottom: 20px;
+}
+
+.candidate-description {
+  color: #5a6c7d;
+  line-height: 1.6;
+  margin-bottom: 0 !important;
+}
+
+.view-more-btn {
+  padding: 0 !important;
+  height: auto !important;
+  color: #1890ff !important;
+  text-decoration: underline;
+}
+
+.skills-section {
+  margin-bottom: 20px;
+}
+
+.skills-tags {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.skill-tag {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.contact-section {
+  margin-bottom: 20px;
+}
+
+.contact-info {
+  margin-top: 12px;
+}
+
+.contact-info .anticon {
+  color: #666;
+  margin-right: 8px;
+}
+
+.meeting-section {
+  margin-bottom: 20px;
+}
+
+.meeting-section .ant-row {
+  margin-bottom: 20px;
+}
+
+.timeline-section {
+  margin-top: 16px;
+  padding-left: 20px;
+}
+
+.timeline-section .ant-timeline-item-content {
+  margin-left: 20px;
+  min-height: auto;
+}
+
+.timeline-section .ant-timeline-item {
+  padding-bottom: 8px;
+}
+
+.feedback-section {
+  margin-top: 24px;
+}
+
+.feedback-btn {
+  background: #2c3e50 !important;
+  border-color: #2c3e50 !important;
+  border-radius: 8px;
+  height: 48px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.feedback-btn:hover {
+  background: #34495e !important;
+  border-color: #34495e !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .preview-details-container {
+    max-width: 100%;
+    margin: 0px;
+    padding: 10px;
+  }
+  
+  .candidate-card {
+    padding: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .stats-section .ant-col {
+    margin-bottom: 16px;
+  }
+  
+  .stat-item {
+    padding: 8px 4px;
+  }
+}
+
+/* Ant Design overrides */
+.ant-divider {
+  margin: 20px 0;
+  border-color: #f0f2f5;
+}
+
+.ant-typography h5 {
+  margin-bottom: 12px !important;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.ant-space-item {
+  display: flex;
+  align-items: center;
+}

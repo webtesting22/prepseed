@@ -1,3 +1,8 @@
+/* .process-view-container{
+   height: 700px;
+   overflow: auto;
+} */
+
 .process-container {
     display: flex;
     min-height: 100vh;
@@ -1380,7 +1385,7 @@
     }
 
     .sidebar {
-        width: 100%;
+        width: unset;
         border-right: none;
         border-bottom: 1px solid #e2e8f0;
         padding: 24px 20px;

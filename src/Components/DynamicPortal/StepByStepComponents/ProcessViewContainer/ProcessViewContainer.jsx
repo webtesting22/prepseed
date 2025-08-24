@@ -5,9 +5,11 @@ import SelectModulesContainer from "../SelectModulesContainer/SelectModulesConta
 import IdentityContainer from "../IdentityContainer/IdentityContainer";
 import LogoUploadContainer from "./LogoUploadContainer";
 import Portal from "../Portal/Portal";
+import PreviewDetails from "../PreviewDetails/PreviewDetails";
 // import DynamicPreview from "./DynamicPreview";
 import "./ProcessViewContainer.css";
 import { FaWifi, FaBolt, FaTimes } from "react-icons/fa";
+import PortalCreationLoader from "../PortalCreationLoader/PortalCreationLoader";
 
 const ProcessViewContainer = () => {
     const {
@@ -117,7 +119,8 @@ const ProcessViewContainer = () => {
     };
 
     return (
-        <div className="process-container">
+        <div className="process-view-container">
+            <div className="process-container">
             <div className="sidebar">
                 <div className="logo-section">
                     <div className="logo"><img src="https://s3.ap-south-1.amazonaws.com/prepseed/prod/ldoc/media/3DLogo.png" alt="" /></div>
@@ -194,9 +197,13 @@ const ProcessViewContainer = () => {
                 </div>
             </div>
             <div className="PortalPreviewContainers">
-                <Portal />
+                <div>
+                    <PreviewDetails />
+                    <PortalCreationLoader />
+                </div>
             </div>
 
+        </div>
         </div>
     );
 };

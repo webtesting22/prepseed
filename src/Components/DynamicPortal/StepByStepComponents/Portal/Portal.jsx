@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import {
     Layout,
     Menu,
@@ -18,7 +19,16 @@ import {
     Tag,
     Table,
     Calendar,
-    Divider
+    Divider,
+    Form,
+    Input,
+    DatePicker,
+    TimePicker,
+    Select,
+    message,
+    Popover,
+    Tooltip,
+    Alert
 } from 'antd';
 import {
     DashboardOutlined,
@@ -32,10 +42,15 @@ import {
     SettingOutlined,
     BellOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined
+    MenuUnfoldOutlined,
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    ClockCircleOutlined,
+    CloseOutlined,
+    PhoneOutlined
 } from '@ant-design/icons';
 import "./Portal.css";
-
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
@@ -79,10 +94,153 @@ const Portal = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [selectedKey, setSelectedKey] = useState('dashboard');
     const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+    const [cookieNoticeVisible, setCookieNoticeVisible] = useState(true);
+
+    // Load user data from localStorage
+    const [userData, setUserData] = useState({
+        logoPreview: null,
+        uploadedLogoUrl: null,
+        brandName: '',
+        selectedIndustry: null,
+        selectedModules: []
+    });
+
+    // Calendar and Event Management State
+    const [events, setEvents] = useState([]);
+    const [eventModalVisible, setEventModalVisible] = useState(false);
+    const [editingEvent, setEditingEvent] = useState(null);
+
+    // Load user data from localStorage on component mount
+    useEffect(() => {
+        try {
+            // Load from created portal data first (latest)
+            const createdPortalData = localStorage.getItem('createdPortalData');
+            if (createdPortalData) {
+                const parsedData = JSON.parse(createdPortalData);
+                console.log('Loaded created portal data:', parsedData); // Debug log
+                setUserData({
+                    logoPreview: parsedData.branding?.logo || null,
+                    uploadedLogoUrl: null,
+                    brandName: parsedData.branding?.name || '',
+                    selectedIndustry: parsedData.industry || null,
+                    selectedModules: parsedData.modules || []
+                });
+                return;
+            }
+
+            // Fallback to dynamic portal data
+            const dynamicPortalData = localStorage.getItem('dynamicPortalData');
+            if (dynamicPortalData) {
+                const parsedData = JSON.parse(dynamicPortalData);
+                console.log('Loaded dynamic portal data:', parsedData); // Debug log
+                setUserData({
+                    logoPreview: parsedData.logoPreview || null,
+                    uploadedLogoUrl: parsedData.uploadedLogoUrl || null,
+                    brandName: parsedData.brandName || '',
+                    selectedIndustry: parsedData.selectedIndustry || null,
+                    selectedModules: parsedData.selectedModules || []
+                });
+            }
+        } catch (error) {
+            console.error('Error loading user data from localStorage:', error);
+        }
+    }, []);
+
+    // Debug log for userData state
+    useEffect(() => {
+        console.log('Current userData state:', userData);
+    }, [userData]);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [form] = Form.useForm();
 
     const {
         token: { colorBgContainer, borderRadiusLG }
     } = theme.useToken();
+
+    // Load events from localStorage on component mount
+    useEffect(() => {
+        const savedEvents = localStorage.getItem('portalEvents');
+        if (savedEvents) {
+            setEvents(JSON.parse(savedEvents));
+        }
+    }, []);
+
+    // Save events to localStorage whenever events change
+    useEffect(() => {
+        localStorage.setItem('portalEvents', JSON.stringify(events));
+    }, [events]);
+
+    // Event Management Functions
+    const addEvent = (eventData) => {
+        const newEvent = {
+            id: Date.now().toString(),
+            ...eventData,
+            date: eventData.date.format('YYYY-MM-DD'),
+            time: eventData.time ? eventData.time.format('HH:mm') : null,
+            createdAt: new Date().toISOString()
+        };
+        setEvents([...events, newEvent]);
+        message.success('Event created successfully!');
+    };
+
+    const updateEvent = (eventId, eventData) => {
+        setEvents(events.map(event =>
+            event.id === eventId
+                ? {
+                    ...event,
+                    ...eventData,
+                    date: eventData.date.format('YYYY-MM-DD'),
+                    time: eventData.time ? eventData.time.format('HH:mm') : null,
+                    updatedAt: new Date().toISOString()
+                }
+                : event
+        ));
+        message.success('Event updated successfully!');
+    };
+
+    const deleteEvent = (eventId) => {
+        setEvents(events.filter(event => event.id !== eventId));
+        message.success('Event deleted successfully!');
+    };
+
+    const getEventsForDate = (date) => {
+        const dateStr = date.format('YYYY-MM-DD');
+        return events.filter(event => event.date === dateStr);
+    };
+
+    const handleEventSubmit = (values) => {
+        if (editingEvent) {
+            updateEvent(editingEvent.id, values);
+        } else {
+            addEvent(values);
+        }
+        setEventModalVisible(false);
+        setEditingEvent(null);
+        form.resetFields();
+    };
+
+    const openEventModal = (date = null) => {
+        setSelectedDate(date);
+        setEditingEvent(null);
+        form.resetFields();
+        if (date) {
+            form.setFieldsValue({ date: date });
+        }
+        setEventModalVisible(true);
+    };
+
+    const openEditModal = (event) => {
+        setEditingEvent(event);
+        form.setFieldsValue({
+            title: event.title,
+            description: event.description,
+            date: dayjs(event.date),
+            time: event.time ? dayjs(event.time, 'HH:mm') : null,
+            priority: event.priority,
+            category: event.category
+        });
+        setEventModalVisible(true);
+    };
 
     const menuItems = [
         {
@@ -336,18 +494,173 @@ const Portal = () => {
         );
     };
 
-    const renderCalendar = () => (
-        <div className="portal-calendar">
-            <Title level={2}>Calendar</Title>
-            <Card>
-                <Calendar
-                    onPanelChange={(value, mode) => {
-                        console.log(value.format('YYYY-MM-DD'), mode);
-                    }}
-                />
-            </Card>
-        </div>
-    );
+    const renderCalendar = () => {
+        // Custom date cell renderer to show events
+        const dateCellRender = (value) => {
+            const dayEvents = getEventsForDate(value);
+            return (
+                <div className="calendar-events">
+                    {dayEvents.map(event => (
+                        <Popover
+                            key={event.id}
+                            title={
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span>{event.title}</span>
+                                    <Space>
+                                        <Tooltip title="Edit Event">
+                                            <Button
+                                                type="text"
+                                                size="small"
+                                                icon={<EditOutlined />}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openEditModal(event);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip title="Delete Event">
+                                            <Button
+                                                type="text"
+                                                size="small"
+                                                danger
+                                                icon={<DeleteOutlined />}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteEvent(event.id);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    </Space>
+                                </div>
+                            }
+                            content={
+                                <div style={{ maxWidth: 300 }}>
+                                    {event.description && <p><strong>Description:</strong> {event.description}</p>}
+                                    {event.time && <p><strong>Time:</strong> {event.time}</p>}
+                                    {event.category && <p><strong>Category:</strong> {event.category}</p>}
+                                    {event.priority && (
+                                        <p>
+                                            <strong>Priority:</strong>
+                                            <Tag color={event.priority === 'High' ? 'red' : event.priority === 'Medium' ? 'orange' : 'green'}>
+                                                {event.priority}
+                                            </Tag>
+                                        </p>
+                                    )}
+                                </div>
+                            }
+                            trigger="hover"
+                        >
+                            <div
+                                className={`calendar-event priority-${event.priority?.toLowerCase()}`}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <span className="event-title">{event.title}</span>
+                                {event.time && (
+                                    <span className="event-time">
+                                        <ClockCircleOutlined style={{ fontSize: '10px', marginRight: 2 }} />
+                                        {event.time}
+                                    </span>
+                                )}
+                            </div>
+                        </Popover>
+                    ))}
+                </div>
+            );
+        };
+
+        return (
+            <div className="portal-calendar">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                    <Title level={2} style={{ margin: 0 }}>Calendar</Title>
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        onClick={() => openEventModal()}
+                    >
+                        Add Event
+                    </Button>
+                </div>
+
+                <Row gutter={[16, 16]}>
+                    <Col xs={24} lg={18}>
+                        <Card>
+                            <Calendar
+                                dateCellRender={dateCellRender}
+                                onSelect={(date) => {
+                                    setSelectedDate(date);
+                                }}
+                                onPanelChange={(value, mode) => {
+                                    console.log(value.format('YYYY-MM-DD'), mode);
+                                }}
+                            />
+                        </Card>
+                    </Col>
+
+                    <Col xs={24} lg={6}>
+                        <Card title="Quick Actions" style={{ marginBottom: 16 }}>
+                            <Space direction="vertical" style={{ width: '100%' }}>
+                                <Button
+                                    type="primary"
+                                    block
+                                    icon={<PlusOutlined />}
+                                    onClick={() => openEventModal(selectedDate)}
+                                >
+                                    Add Event
+                                </Button>
+                                <Button
+                                    block
+                                    icon={<CalendarOutlined />}
+                                    onClick={() => openEventModal(dayjs())}
+                                >
+                                    Add Today's Event
+                                </Button>
+                            </Space>
+                        </Card>
+
+                        <Card title="Upcoming Events">
+                            <List
+                                size="small"
+                                dataSource={events
+                                    .filter(event => dayjs(event.date).isAfter(dayjs(), 'day') || dayjs(event.date).isSame(dayjs(), 'day'))
+                                    .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+                                    .slice(0, 5)
+                                }
+                                renderItem={(event) => (
+                                    <List.Item
+                                        actions={[
+                                            <Button
+                                                type="text"
+                                                size="small"
+                                                icon={<EditOutlined />}
+                                                onClick={() => openEditModal(event)}
+                                            />,
+                                            <Button
+                                                type="text"
+                                                size="small"
+                                                danger
+                                                icon={<DeleteOutlined />}
+                                                onClick={() => deleteEvent(event.id)}
+                                            />
+                                        ]}
+                                    >
+                                        <List.Item.Meta
+                                            title={event.title}
+                                            description={
+                                                <div>
+                                                    <div>{dayjs(event.date).format('MMM DD, YYYY')}</div>
+                                                    {event.time && <div>{event.time}</div>}
+                                                </div>
+                                            }
+                                        />
+                                    </List.Item>
+                                )}
+                            />
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
+        );
+    };
 
     const renderSupport = () => (
         <div className="portal-support">
@@ -418,6 +731,7 @@ const Portal = () => {
 
     return (
         <Layout className="portal-layout">
+
             <Sider
                 trigger={null}
                 collapsible
@@ -429,11 +743,33 @@ const Portal = () => {
                 <div className="portal-logo">
                     {!collapsed ? (
                         <>
-                            <div className="logo-icon">CX</div>
-                            <span className="brand-name">Craxinno</span>
+                            <div className="logo-icon">
+                                {userData.logoPreview || userData.uploadedLogoUrl ? (
+                                    <img
+                                        src={userData.logoPreview || userData.uploadedLogoUrl}
+                                        alt="Brand Logo"
+                                        className="brand-logo-img"
+                                    />
+                                ) : (
+                                    userData.brandName ? userData.brandName.substring(0, 2).toUpperCase() : 'CX'
+                                )}
+                            </div>
+                            <span className="brand-name">
+                                {userData.brandName || 'Craxinno'}
+                            </span>
                         </>
                     ) : (
-                        <div className="logo-icon">CX</div>
+                        <div className="logo-icon">
+                            {userData.logoPreview || userData.uploadedLogoUrl ? (
+                                <img
+                                    src={userData.logoPreview || userData.uploadedLogoUrl}
+                                    alt="Brand Logo"
+                                    className="brand-logo-img"
+                                />
+                            ) : (
+                                userData.brandName ? userData.brandName.substring(0, 2).toUpperCase() : 'CX'
+                            )}
+                        </div>
                     )}
                 </div>
 
@@ -512,6 +848,157 @@ const Portal = () => {
             >
                 <p>Are you sure you want to logout? You will need to sign in again to access the portal.</p>
             </Modal>
+
+            {/* Event Creation/Edit Modal */}
+            <Modal
+                title={editingEvent ? 'Edit Event' : 'Create New Event'}
+                open={eventModalVisible}
+                onCancel={() => {
+                    setEventModalVisible(false);
+                    setEditingEvent(null);
+                    form.resetFields();
+                }}
+                footer={null}
+                width={600}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleEventSubmit}
+                    initialValues={{
+                        priority: 'Medium',
+                        category: 'General'
+                    }}
+                >
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                name="title"
+                                label="Event Title"
+                                rules={[{ required: true, message: 'Please enter event title' }]}
+                            >
+                                <Input placeholder="Enter event title" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="date"
+                                label="Date"
+                                rules={[{ required: true, message: 'Please select date' }]}
+                            >
+                                <DatePicker style={{ width: '100%' }} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="time"
+                                label="Time (Optional)"
+                            >
+                                <TimePicker style={{ width: '100%' }} format="HH:mm" />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="priority"
+                                label="Priority"
+                                rules={[{ required: true, message: 'Please select priority' }]}
+                            >
+                                <Select>
+                                    <Select.Option value="Low">Low</Select.Option>
+                                    <Select.Option value="Medium">Medium</Select.Option>
+                                    <Select.Option value="High">High</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="category"
+                                label="Category"
+                                rules={[{ required: true, message: 'Please select category' }]}
+                            >
+                                <Select>
+                                    <Select.Option value="General">General</Select.Option>
+                                    <Select.Option value="Meeting">Meeting</Select.Option>
+                                    <Select.Option value="Task">Task</Select.Option>
+                                    <Select.Option value="Reminder">Reminder</Select.Option>
+                                    <Select.Option value="Appointment">Appointment</Select.Option>
+                                    <Select.Option value="Deadline">Deadline</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Form.Item
+                        name="description"
+                        label="Description (Optional)"
+                    >
+                        <Input.TextArea
+                            rows={4}
+                            placeholder="Enter event description..."
+                        />
+                    </Form.Item>
+
+                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+                        <Space>
+                            <Button
+                                onClick={() => {
+                                    setEventModalVisible(false);
+                                    setEditingEvent(null);
+                                    form.resetFields();
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="primary" htmlType="submit">
+                                {editingEvent ? 'Update Event' : 'Create Event'}
+                            </Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            {/* Cookie-style Notice Bar */}
+            {cookieNoticeVisible && (
+                <div className={`cookie-notice-container ${cookieNoticeVisible ? 'fade-in' : 'fade-out'}`}>
+                    <div className="cookie-notice-content">
+                        <div className="cookie-notice-text">
+                            <strong>🍪 Demo Portal Experience</strong>
+                            <span className="cookie-description">
+                                This is a preview of our dynamic portal system. Get full access with all features and customizations.
+                            </span>
+                        </div>
+                        <div className="cookie-notice-actions">
+                            <Button
+                                type="default"
+                                icon={<PhoneOutlined />}
+                                onClick={() => {
+                                    const phoneNumber = '919913382221'; // +91 99133 82221
+                                    const message = 'Hi! I am interested in getting full access to the dynamic portal system. Could you please provide me with the credentials and pricing details?';
+                                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                                    window.open(whatsappUrl, '_blank');
+                                }}
+                                className="contact-btn"
+                            >
+                                Contact Us
+                            </Button>
+                            <Button
+                                type="text"
+                                icon={<CloseOutlined />}
+                                onClick={() => setCookieNoticeVisible(false)}
+                                className="close-btn"
+                            >
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </Layout>
     );
 };

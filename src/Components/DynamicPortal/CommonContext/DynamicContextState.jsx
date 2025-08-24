@@ -6,32 +6,73 @@ import DynamicPortalContext from "./DynamicPortalContext";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const DynamicContextState = ({ children }) => {
+  // LocalStorage key
+  const STORAGE_KEY = 'dynamicPortalData';
+
+  // Helper function to load data from localStorage
+  const loadFromStorage = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
+      return {};
+    }
+  };
+
+  // Helper function to save data to localStorage
+  const saveToStorage = (data) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  };
+
+  // Load initial data from localStorage
+  const savedData = loadFromStorage();
+
   const [isPortalOpen, setIsPortalOpen] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [stepHistory, setStepHistory] = useState([0]);
+  const [currentStep, setCurrentStep] = useState(savedData.currentStep || 0);
+  const [stepHistory, setStepHistory] = useState(savedData.stepHistory || [0]);
 
   // Industries state
   const [industries, setIndustries] = useState([]);
-  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [selectedIndustry, setSelectedIndustry] = useState(savedData.selectedIndustry || null);
   const [industriesLoading, setIndustriesLoading] = useState(true);
   const [industriesError, setIndustriesError] = useState("");
 
   // Modules state
   const [modules, setModules] = useState([]);
-  const [selectedModules, setSelectedModules] = useState([]);
+  const [selectedModules, setSelectedModules] = useState(savedData.selectedModules || []);
   const [modulesLoading, setModulesLoading] = useState(true);
   const [modulesError, setModulesError] = useState("");
 
   // Logo/Brand state
   const [logoFile, setLogoFile] = useState(null);
-  const [logoPreview, setLogoPreview] = useState(null);
-  const [brandName, setBrandName] = useState("");
-  const [extractedColors, setExtractedColors] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [logoPreview, setLogoPreview] = useState(savedData.logoPreview || null);
+  const [brandName, setBrandName] = useState(savedData.brandName || "");
+  const [extractedColors, setExtractedColors] = useState(savedData.extractedColors || []);
+  const [selectedColors, setSelectedColors] = useState(savedData.selectedColors || []);
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoUploadError, setLogoUploadError] = useState("");
-  const [logoUploadSuccess, setLogoUploadSuccess] = useState(false);
-  const [uploadedLogoUrl, setUploadedLogoUrl] = useState("");
+  const [logoUploadSuccess, setLogoUploadSuccess] = useState(savedData.logoUploadSuccess || false);
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState(savedData.uploadedLogoUrl || "");
+
+  // Personal Information state
+  const [personalInfo, setPersonalInfo] = useState(savedData.personalInfo || {
+    fullName: "",
+    email: "",
+    phone: "",
+    companyName: "",
+    jobTitle: "",
+    companySize: "",
+    location: ""
+  });
+
+  // Portal Creation state - These are temporary UI states and should not persist
+  const [isCreatingPortal, setIsCreatingPortal] = useState(false);
+  const [portalCreationProgress, setPortalCreationProgress] = useState(0);
 
   const steps = [
     { id: 0, name: "Logo & Branding", component: "LogoUpload" },
@@ -250,6 +291,129 @@ const DynamicContextState = ({ children }) => {
     return selectedColors.some((c) => c.hex === color.hex);
   };
 
+  // Function to update personal information
+  const updatePersonalInfo = (field, value) => {
+    setPersonalInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Function to update multiple personal info fields at once
+  const updatePersonalInfoBatch = (updates) => {
+    setPersonalInfo(prev => ({
+      ...prev,
+      ...updates
+    }));
+  };
+
+  // Function to check if personal info is complete
+  // Note: companyName removed from required fields as Company Information section is hidden
+  const isPersonalInfoComplete = () => {
+    const requiredFields = ['fullName', 'email'];
+    return requiredFields.every(field => personalInfo[field] && personalInfo[field].trim() !== '');
+  };
+
+  // Function to check if all steps are completed
+  const isAllStepsCompleted = () => {
+    const hasLogo = logoPreview || uploadedLogoUrl;
+    const hasIndustry = selectedIndustry !== null;
+    const hasModules = selectedModules && selectedModules.length > 0;
+    const hasPersonalInfo = isPersonalInfoComplete();
+    
+    return hasLogo && hasIndustry && hasModules && hasPersonalInfo;
+  };
+
+  // Function to get portal data for creation
+  const getPortalData = () => {
+    return {
+      step: currentStep,
+      industry: selectedIndustry,
+      modules: selectedModules,
+      branding: {
+        name: brandName,
+        logo: logoPreview || uploadedLogoUrl,
+        colors: selectedColors
+      },
+      personal: personalInfo,
+      completionDate: new Date().toISOString()
+    };
+  };
+
+  // Function to start portal creation process
+  const startPortalCreation = () => {
+    if (!isAllStepsCompleted()) {
+      console.warn('Cannot create portal: Not all steps completed');
+      return false;
+    }
+    
+    setIsCreatingPortal(true);
+    setPortalCreationProgress(0);
+    
+    // Simulate portal creation with progress
+    const interval = setInterval(() => {
+      setPortalCreationProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          // Reset portal creation values and redirect
+          setTimeout(() => {
+            setIsCreatingPortal(false);
+            setPortalCreationProgress(0);
+            // Save final portal data to localStorage for the portal page
+            const portalData = getPortalData();
+            localStorage.setItem('createdPortalData', JSON.stringify(portalData));
+            
+            // Clean up any old portal creation states from localStorage
+            const currentData = loadFromStorage();
+            if (currentData.isCreatingPortal !== undefined || currentData.portalCreationProgress !== undefined) {
+              delete currentData.isCreatingPortal;
+              delete currentData.portalCreationProgress;
+              saveToStorage(currentData);
+            }
+            
+            // Redirect to portal
+            window.location.href = '/portal';
+          }, 1000);
+          return 100;
+        }
+        return prev + (100 / 30); // 30 seconds total
+      });
+    }, 1000); // Update every second
+    
+    return true;
+  };
+
+  // Function to clear all data (including localStorage)
+  const clearAllData = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      // Reset all state to initial values
+      setCurrentStep(0);
+      setStepHistory([0]);
+      setSelectedIndustry(null);
+      setSelectedModules([]);
+      setLogoPreview(null);
+      setBrandName("");
+      setExtractedColors([]);
+      setSelectedColors([]);
+      setLogoUploadSuccess(false);
+      setUploadedLogoUrl("");
+      setPersonalInfo({
+        fullName: "",
+        email: "",
+        phone: "",
+        companyName: "",
+        jobTitle: "",
+        companySize: "",
+        location: ""
+      });
+      setIsCreatingPortal(false);
+      setPortalCreationProgress(0);
+    } catch (error) {
+      console.error('Error clearing data:', error);
+    }
+  };
+
   // Clear selected modules when industry changes
   useEffect(() => {
     if (selectedIndustry) {
@@ -257,6 +421,37 @@ const DynamicContextState = ({ children }) => {
       setSelectedModules([]);
     }
   }, [selectedIndustry]);
+
+  // Save data to localStorage whenever important state changes
+  // Note: isCreatingPortal and portalCreationProgress are excluded as they are temporary UI states
+  useEffect(() => {
+    const dataToSave = {
+      currentStep,
+      stepHistory,
+      selectedIndustry,
+      selectedModules,
+      logoPreview,
+      brandName,
+      extractedColors,
+      selectedColors,
+      logoUploadSuccess,
+      uploadedLogoUrl,
+      personalInfo
+    };
+    saveToStorage(dataToSave);
+  }, [
+    currentStep,
+    stepHistory,
+    selectedIndustry,
+    selectedModules,
+    logoPreview,
+    brandName,
+    extractedColors,
+    selectedColors,
+    logoUploadSuccess,
+    uploadedLogoUrl,
+    personalInfo
+  ]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -330,6 +525,19 @@ const DynamicContextState = ({ children }) => {
         removeLogo,
         handleColorSelect,
         isColorSelected,
+        // Personal Information
+        personalInfo,
+        updatePersonalInfo,
+        updatePersonalInfoBatch,
+        isPersonalInfoComplete,
+        // Data Management
+        clearAllData,
+        // Portal Creation
+        isCreatingPortal,
+        portalCreationProgress,
+        isAllStepsCompleted,
+        startPortalCreation,
+        getPortalData,
       }}
     >
       {children}
