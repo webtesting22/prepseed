@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const DynamicContextState = ({ children }) => {
   // LocalStorage key
-  const STORAGE_KEY = 'dynamicPortalData';
+  const STORAGE_KEY = "dynamicPortalData";
 
   // Helper function to load data from localStorage
   const loadFromStorage = () => {
@@ -15,7 +15,7 @@ const DynamicContextState = ({ children }) => {
       const saved = localStorage.getItem(STORAGE_KEY);
       return saved ? JSON.parse(saved) : {};
     } catch (error) {
-      console.error('Error loading from localStorage:', error);
+      console.error("Error loading from localStorage:", error);
       return {};
     }
   };
@@ -25,7 +25,7 @@ const DynamicContextState = ({ children }) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-      console.error('Error saving to localStorage:', error);
+      console.error("Error saving to localStorage:", error);
     }
   };
 
@@ -38,13 +38,17 @@ const DynamicContextState = ({ children }) => {
 
   // Industries state
   const [industries, setIndustries] = useState([]);
-  const [selectedIndustry, setSelectedIndustry] = useState(savedData.selectedIndustry || null);
+  const [selectedIndustry, setSelectedIndustry] = useState(
+    savedData.selectedIndustry || null
+  );
   const [industriesLoading, setIndustriesLoading] = useState(true);
   const [industriesError, setIndustriesError] = useState("");
 
   // Modules state
   const [modules, setModules] = useState([]);
-  const [selectedModules, setSelectedModules] = useState(savedData.selectedModules || []);
+  const [selectedModules, setSelectedModules] = useState(
+    savedData.selectedModules || []
+  );
   const [modulesLoading, setModulesLoading] = useState(true);
   const [modulesError, setModulesError] = useState("");
 
@@ -52,12 +56,20 @@ const DynamicContextState = ({ children }) => {
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(savedData.logoPreview || null);
   const [brandName, setBrandName] = useState(savedData.brandName || "");
-  const [extractedColors, setExtractedColors] = useState(savedData.extractedColors || []);
-  const [selectedColors, setSelectedColors] = useState(savedData.selectedColors || []);
+  const [extractedColors, setExtractedColors] = useState(
+    savedData.extractedColors || []
+  );
+  const [selectedColors, setSelectedColors] = useState(
+    savedData.selectedColors || []
+  );
   const [logoUploading, setLogoUploading] = useState(false);
   const [logoUploadError, setLogoUploadError] = useState("");
-  const [logoUploadSuccess, setLogoUploadSuccess] = useState(savedData.logoUploadSuccess || false);
-  const [uploadedLogoUrl, setUploadedLogoUrl] = useState(savedData.uploadedLogoUrl || "");
+  const [logoUploadSuccess, setLogoUploadSuccess] = useState(
+    savedData.logoUploadSuccess || false
+  );
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState(
+    savedData.uploadedLogoUrl || ""
+  );
 
   // Session tracking state
   const [sessionId, setSessionId] = useState(null);
@@ -87,15 +99,17 @@ const DynamicContextState = ({ children }) => {
   });
 
   // Personal Information state
-  const [personalInfo, setPersonalInfo] = useState(savedData.personalInfo || {
-    fullName: "",
-    email: "",
-    phone: "",
-    companyName: "",
-    jobTitle: "",
-    companySize: "",
-    location: ""
-  });
+  const [personalInfo, setPersonalInfo] = useState(
+    savedData.personalInfo || {
+      fullName: "",
+      email: "",
+      phone: "",
+      companyName: "",
+      jobTitle: "",
+      companySize: "",
+      location: "",
+    }
+  );
 
   // Portal Creation state - These are temporary UI states and should not persist
   const [isCreatingPortal, setIsCreatingPortal] = useState(false);
@@ -454,6 +468,8 @@ const DynamicContextState = ({ children }) => {
         setPortalCurrentStep(newCurrentStep);
         setPortalNextStepUrl(newNextStepUrl);
 
+        // updatePortalStep(1, stepData);
+
         return response.data.data;
       } else {
         throw new Error("Invalid portal API response format");
@@ -472,9 +488,14 @@ const DynamicContextState = ({ children }) => {
   };
 
   // Function to update portal step data
-  const updatePortalStep = async (stepNumber, stepData) => {
+  const updatePortalStep = async (
+    stepNumber,
+    stepData,
+    portalIdToUse = null
+  ) => {
     try {
-      if (!portalId) {
+      const targetPortalId = portalIdToUse || portalId;
+      if (!targetPortalId) {
         throw new Error("Portal ID not found. Please initialize portal first.");
       }
 
@@ -487,7 +508,7 @@ const DynamicContextState = ({ children }) => {
       };
 
       const response = await axios.put(
-        `${API_BASE_URL}/website/tracking/portal/${portalId}/step/${stepNumber}`,
+        `${API_BASE_URL}/website/tracking/portal/${targetPortalId}/step/${stepNumber}`,
         requestBody
       );
 
@@ -520,25 +541,27 @@ const DynamicContextState = ({ children }) => {
 
   // Function to update personal information
   const updatePersonalInfo = (field, value) => {
-    setPersonalInfo(prev => ({
+    setPersonalInfo((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   // Function to update multiple personal info fields at once
   const updatePersonalInfoBatch = (updates) => {
-    setPersonalInfo(prev => ({
+    setPersonalInfo((prev) => ({
       ...prev,
-      ...updates
+      ...updates,
     }));
   };
 
   // Function to check if personal info is complete
   // Note: companyName removed from required fields as Company Information section is hidden
   const isPersonalInfoComplete = () => {
-    const requiredFields = ['fullName', 'email'];
-    return requiredFields.every(field => personalInfo[field] && personalInfo[field].trim() !== '');
+    const requiredFields = ["fullName", "email"];
+    return requiredFields.every(
+      (field) => personalInfo[field] && personalInfo[field].trim() !== ""
+    );
   };
 
   // Function to check if all steps are completed
@@ -547,7 +570,7 @@ const DynamicContextState = ({ children }) => {
     const hasIndustry = selectedIndustry !== null;
     const hasModules = selectedModules && selectedModules.length > 0;
     const hasPersonalInfo = isPersonalInfoComplete();
-    
+
     return hasLogo && hasIndustry && hasModules && hasPersonalInfo;
   };
 
@@ -560,26 +583,26 @@ const DynamicContextState = ({ children }) => {
       branding: {
         name: brandName,
         logo: logoPreview || uploadedLogoUrl,
-        colors: selectedColors
+        colors: selectedColors,
       },
       personal: personalInfo,
-      completionDate: new Date().toISOString()
+      completionDate: new Date().toISOString(),
     };
   };
 
   // Function to start portal creation process
   const startPortalCreation = () => {
     if (!isAllStepsCompleted()) {
-      console.warn('Cannot create portal: Not all steps completed');
+      console.warn("Cannot create portal: Not all steps completed");
       return false;
     }
-    
+
     setIsCreatingPortal(true);
     setPortalCreationProgress(0);
-    
+
     // Simulate portal creation with progress
     const interval = setInterval(() => {
-      setPortalCreationProgress(prev => {
+      setPortalCreationProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           // Reset portal creation values and redirect
@@ -588,20 +611,23 @@ const DynamicContextState = ({ children }) => {
             setPortalCreationProgress(0);
             // Save final portal data to localStorage for the portal page
             const portalData = getPortalData();
-            localStorage.setItem('createdPortalData', JSON.stringify(portalData));
-            
+            localStorage.setItem(
+              "createdPortalData",
+              JSON.stringify(portalData)
+            );
+
             // Clear all step data to reset the process
             clearAllData();
-            
+
             // Redirect to portal
-            window.location.href = '/portal';
+            window.location.href = "/portal";
           }, 1000);
           return 100;
         }
-        return prev + (100 / 30); // 30 seconds total
+        return prev + 100 / 30; // 30 seconds total
       });
     }, 1000); // Update every second
-    
+
     return true;
   };
 
@@ -627,12 +653,12 @@ const DynamicContextState = ({ children }) => {
         companyName: "",
         jobTitle: "",
         companySize: "",
-        location: ""
+        location: "",
       });
       setIsCreatingPortal(false);
       setPortalCreationProgress(0);
     } catch (error) {
-      console.error('Error clearing data:', error);
+      console.error("Error clearing data:", error);
     }
   };
 
@@ -658,7 +684,7 @@ const DynamicContextState = ({ children }) => {
       selectedColors,
       logoUploadSuccess,
       uploadedLogoUrl,
-      personalInfo
+      personalInfo,
     };
     saveToStorage(dataToSave);
   }, [
@@ -672,7 +698,7 @@ const DynamicContextState = ({ children }) => {
     selectedColors,
     logoUploadSuccess,
     uploadedLogoUrl,
-    personalInfo
+    personalInfo,
   ]);
 
   // Fetch data on component mount
@@ -731,6 +757,8 @@ const DynamicContextState = ({ children }) => {
 
   const nextStep = async () => {
     if (currentStep < steps.length - 1) {
+      let currentPortalId = portalId;
+
       // If we're on the logo upload step (step 0) and have a brand name, initialize portal
       if (
         currentStep === 0 &&
@@ -742,7 +770,8 @@ const DynamicContextState = ({ children }) => {
         !portalId
       ) {
         try {
-          await initializePortal();
+          const portalData = await initializePortal();
+          currentPortalId = portalData.portalId; // Use the returned portalId directly
           console.log("Portal initialized before proceeding to next step.");
         } catch (error) {
           console.error("Failed to initialize portal:", error);
@@ -751,8 +780,10 @@ const DynamicContextState = ({ children }) => {
         }
       }
 
+      console.log("portalId: ", currentPortalId);
+
       // Update portal step data before proceeding
-      if (portalId) {
+      if (currentPortalId) {
         try {
           let stepData = {};
 
@@ -840,7 +871,7 @@ const DynamicContextState = ({ children }) => {
           }
 
           // Update portal step (step numbers are 1-based for API)
-          await updatePortalStep(currentStep + 1, stepData);
+          await updatePortalStep(currentStep + 1, stepData, currentPortalId);
           console.log(`Portal step ${currentStep + 1} updated successfully.`);
         } catch (error) {
           console.error("Failed to update portal step:", error);
