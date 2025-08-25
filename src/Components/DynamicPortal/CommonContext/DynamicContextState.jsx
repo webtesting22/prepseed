@@ -756,6 +756,51 @@ const DynamicContextState = ({ children }) => {
   }, []);
 
   const nextStep = async () => {
+    // Handle last step completion
+    if (currentStep === steps.length - 1) {
+      // This is the last step, update portal step data first, then trigger portal creation
+      if (isAllStepsCompleted()) {
+        try {
+          // Update the final step (step 4) data before creating portal
+          if (portalId) {
+            let stepData = {
+              // API expects modules array for step 4
+              modules: selectedModules,
+              // Also include all identity data for completeness
+              name: personalInfo.fullName,
+              email: personalInfo.email,
+              mobile: personalInfo.phone,
+              organizationType: "company",
+              ...personalInfo,
+              selectedIndustry: selectedIndustry
+                ? {
+                    _id: selectedIndustry._id,
+                    name: selectedIndustry.name,
+                  }
+                : null,
+              brandName: brandName,
+              logoUrl: uploadedLogoUrl,
+              selectedColors: selectedColors,
+            };
+
+            // Update portal step 4 (final step)
+            await updatePortalStep(4, stepData, portalId);
+            console.log("Final portal step 4 updated successfully.");
+          }
+
+          // Now start portal creation
+          startPortalCreation();
+        } catch (error) {
+          console.error("Failed to update final portal step:", error);
+          // Don't proceed if portal step update fails
+          return;
+        }
+      } else {
+        console.warn("Cannot complete: Not all steps are finished");
+      }
+      return;
+    }
+
     if (currentStep < steps.length - 1) {
       let currentPortalId = portalId;
 
@@ -849,11 +894,11 @@ const DynamicContextState = ({ children }) => {
                 // API expects modules array for step 4
                 modules: selectedModules,
                 // Also include all identity data for completeness
-                name: identityData.fullName,
-                email: identityData.email,
-                mobile: identityData.phone,
+                name: personalInfo.fullName,
+                email: personalInfo.email,
+                mobile: personalInfo.phone,
                 organizationType: "company",
-                ...identityData,
+                ...personalInfo,
                 selectedIndustry: selectedIndustry
                   ? {
                       _id: selectedIndustry._id,
