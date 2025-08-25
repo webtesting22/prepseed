@@ -779,7 +779,13 @@ const DynamicContextState = ({ children }) => {
                   }
                 : null,
               brandName: brandName,
-              logoUrl: uploadedLogoUrl,
+              // Logo data structure as expected by API validation
+              logo: uploadedLogoUrl
+                ? {
+                    url: uploadedLogoUrl,
+                    filename: logoFile ? logoFile.name : "uploaded-logo",
+                  }
+                : null,
               selectedColors: selectedColors,
             };
 
@@ -838,11 +844,17 @@ const DynamicContextState = ({ children }) => {
             case 1: // Logo & Branding (when moving from step 0 to 1)
               // API step 1: CLIENT_INFO_AND_LOGO - expects companyName
               stepData = {
-                logoUrl: uploadedLogoUrl,
                 companyName: brandName, // API expects companyName, not brandName
                 brandName: brandName, // Keep brandName for backward compatibility
                 extractedColors: extractedColors,
                 selectedColors: selectedColors,
+                // Logo data structure as expected by API validation
+                logo: uploadedLogoUrl
+                  ? {
+                      url: uploadedLogoUrl,
+                      filename: logoFile ? logoFile.name : "uploaded-logo",
+                    }
+                  : null,
                 logoFile: logoFile
                   ? {
                       name: logoFile.name,
@@ -906,7 +918,13 @@ const DynamicContextState = ({ children }) => {
                     }
                   : null,
                 brandName: brandName,
-                logoUrl: uploadedLogoUrl,
+                // Logo data structure as expected by API validation
+                logo: uploadedLogoUrl
+                  ? {
+                      url: uploadedLogoUrl,
+                      filename: logoFile ? logoFile.name : "uploaded-logo",
+                    }
+                  : null,
                 selectedColors: selectedColors,
               };
               break;
