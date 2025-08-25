@@ -363,13 +363,8 @@ const DynamicContextState = ({ children }) => {
             const portalData = getPortalData();
             localStorage.setItem('createdPortalData', JSON.stringify(portalData));
             
-            // Clean up any old portal creation states from localStorage
-            const currentData = loadFromStorage();
-            if (currentData.isCreatingPortal !== undefined || currentData.portalCreationProgress !== undefined) {
-              delete currentData.isCreatingPortal;
-              delete currentData.portalCreationProgress;
-              saveToStorage(currentData);
-            }
+            // Clear all step data to reset the process
+            clearAllData();
             
             // Redirect to portal
             window.location.href = '/portal';

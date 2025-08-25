@@ -45,7 +45,9 @@ import {
     message,
     Popover,
     Tooltip,
-    Alert
+    Alert,
+    Drawer,
+    ColorPicker
 } from 'antd';
 import {
     DashboardOutlined,
@@ -148,54 +150,41 @@ const INCOME_COLORS = {
     expense: '#ef4444'
 };
 
-// Drive/Media data
-const driveData = [
-    {
-        key: '1',
-        name: 'Project Documents',
-        type: 'folder',
-        size: '2.3 GB',
-        modified: '2025-01-15',
-        items: 45,
-        icon: <FolderOutlined style={{ color: '#f59e0b' }} />
-    },
-    {
-        key: '2',
-        name: 'Marketing Materials',
-        type: 'folder',
-        size: '856 MB',
-        modified: '2025-01-10',
-        items: 23,
-        icon: <FolderOutlined style={{ color: '#3b82f6' }} />
-    },
-    {
-        key: '3',
-        name: 'Brand Guidelines.pdf',
-        type: 'pdf',
-        size: '12.5 MB',
-        modified: '2025-01-12',
-        items: null,
-        icon: <FileOutlined style={{ color: '#ef4444' }} />
-    },
-    {
-        key: '4',
-        name: 'Logo Assets.zip',
-        type: 'zip',
-        size: '45.2 MB',
-        modified: '2025-01-08',
-        items: null,
-        icon: <FileOutlined style={{ color: '#8b5cf6' }} />
-    },
-    {
-        key: '5',
-        name: 'Product Images',
-        type: 'folder',
-        size: '1.2 GB',
-        modified: '2025-01-05',
-        items: 87,
-        icon: <FolderOutlined style={{ color: '#10b981' }} />
-    }
-];
+// Enhanced Drive/Media data with folder hierarchy
+const driveData = {
+    folders: [
+        { key: 'f1', name: 'Tony Stark', type: 'folder', items: 10, collaborators: ['G', 'T'], color: '#3b82f6', starred: true },
+        { key: 'f2', name: 'Design Tour2025', type: 'chat', items: 1, collaborators: ['N', 'G', 'D'], color: '#10b981', starred: false },
+        { key: 'f3', name: 'Website Document', type: 'document', items: 1, collaborators: ['F'], color: '#06b6d4', starred: true },
+        { key: 'f4', name: 'Annual Meetup', type: 'board', items: 10, collaborators: ['G', 'A'], color: '#8b5cf6', starred: true },
+        { key: 'f5', name: 'John Wick', type: 'folder', items: 12, collaborators: ['F'], color: '#3b82f6', starred: false },
+        { key: 'f6', name: 'Fillio Website', type: 'chat', items: 1, collaborators: ['G', 'D'], color: '#10b981', starred: true },
+        { key: 'f7', name: 'Alfred Reid', type: 'document', items: 1, collaborators: ['F'], color: '#06b6d4', starred: false },
+        { key: 'f8', name: 'Kelvin Marcel', type: 'board', items: 5, collaborators: ['G', 'A'], color: '#8b5cf6', starred: false },
+        { key: 'f9', name: 'Team File', type: 'folder', items: 15, collaborators: ['N', 'G', 'T'], color: '#3b82f6', starred: true }
+    ],
+    quickAccess: [
+        { key: 'q1', name: 'Tony Stark', type: 'folder' },
+        { key: 'q2', name: 'Fillio Website', type: 'chat' },
+        { key: 'q3', name: 'Website Document', type: 'document' },
+        { key: 'q4', name: 'Fillio Agency Work', type: 'board' },
+        { key: 'q5', name: 'Team File', type: 'folder' }
+    ],
+    allFiles: [
+        { key: 'a1', name: 'Tony Stark', type: 'folder' },
+        { key: 'a2', name: 'Design Tour2025', type: 'chat' },
+        { key: 'a3', name: 'Website Document', type: 'document' },
+        { key: 'a4', name: 'Annual Meetup', type: 'board' },
+        { key: 'a5', name: 'John Wick', type: 'folder' },
+        { key: 'a6', name: 'Fillio Website', type: 'chat' },
+        { key: 'a7', name: 'Alfred Reid', type: 'document' },
+        { key: 'a8', name: 'Kelvin Marcel', type: 'board' },
+        { key: 'a9', name: 'Task List', type: 'board' },
+        { key: 'a10', name: 'Business Chat', type: 'chat' },
+        { key: 'a11', name: 'Domain File', type: 'folder' },
+        { key: 'a12', name: 'Salary Doc', type: 'document' }
+    ]
+};
 
 // Drive storage stats
 const driveStats = [
@@ -239,6 +228,23 @@ const Portal = () => {
     const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [cookieNoticeVisible, setCookieNoticeVisible] = useState(true);
     const [driveTab, setDriveTab] = useState('dashboard');
+    const [currentFolder, setCurrentFolder] = useState(null);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    const [driveFilter, setDriveFilter] = useState('All');
+    const [customizationOpen, setCustomizationOpen] = useState(false);
+    const [customColors, setCustomColors] = useState({
+        sidebarBg: null,
+        sidebarText: null,
+        sidebarLinksBg: null,
+        sidebarLinksText: null,
+        sidebarLinksHover: null,
+        logoBackground: null,
+        logoText: null,
+        topBarBg: null,
+        topBarText: null,
+        topBarIcons: null
+    });
 
     // Load user data from localStorage
     const [userData, setUserData] = useState({
@@ -293,6 +299,19 @@ const Portal = () => {
         }
     }, []);
 
+    // Load custom colors from localStorage
+    useEffect(() => {
+        const savedColors = localStorage.getItem('portalCustomColors');
+        if (savedColors) {
+            try {
+                const parsedColors = JSON.parse(savedColors);
+                setCustomColors(parsedColors);
+            } catch (error) {
+                console.error('Error loading custom colors:', error);
+            }
+        }
+    }, []);
+
     // Debug log for userData state
     useEffect(() => {
         console.log('Current userData state:', userData);
@@ -309,11 +328,103 @@ const Portal = () => {
         return brightness > 128;
     };
 
-    // Get dynamic colors from user's selected colors
-    const primaryColor = userData.selectedColors?.[0]?.hex || '#1890ff';
-    const secondaryColor = userData.selectedColors?.[1]?.hex || '#096dd9';
-    const primaryTextColor = isLightColor(primaryColor) ? '#000000' : 'black';
-    const secondaryTextColor = isLightColor(secondaryColor) ? '#000000' : '#ffffff';
+    // Get dynamic colors from user's selected colors or custom colors
+    const primaryColor = customColors.sidebarBg || userData.selectedColors?.[0]?.hex || '#1890ff';
+    const secondaryColor = customColors.topBarBg || userData.selectedColors?.[1]?.hex || '#096dd9';
+    const primaryTextColor = customColors.sidebarText || (isLightColor(primaryColor) ? '#000000' : '#ffffff');
+    const secondaryTextColor = customColors.topBarText || (isLightColor(secondaryColor) ? '#000000' : '#ffffff');
+
+    // Additional specific colors
+    const sidebarLinksColor = customColors.sidebarLinksText || primaryTextColor;
+    const sidebarLinksBgColor = customColors.sidebarLinksBg || 'transparent';
+    const sidebarLinksHoverColor = customColors.sidebarLinksHover || 'rgba(255, 255, 255, 0.1)';
+    const logoBackgroundColor = customColors.logoBackground || secondaryColor;
+    const logoTextColor = customColors.logoText || (isLightColor(logoBackgroundColor) ? '#000000' : '#ffffff');
+    const topBarIconsColor = customColors.topBarIcons || secondaryTextColor;
+
+    // Function to handle color changes and save to localStorage
+    const handleColorChange = (colorType, color) => {
+        const colorValue = typeof color === 'string' ? color : color.toHexString();
+        const newColors = {
+            ...customColors,
+            [colorType]: colorValue
+        };
+        setCustomColors(newColors);
+        localStorage.setItem('portalCustomColors', JSON.stringify(newColors));
+    };
+
+    // Function to reset colors to default
+    const resetColors = () => {
+        setCustomColors({
+            sidebarBg: null,
+            sidebarText: null,
+            sidebarLinksBg: null,
+            sidebarLinksText: null,
+            sidebarLinksHover: null,
+            logoBackground: null,
+            logoText: null,
+            topBarBg: null,
+            topBarText: null,
+            topBarIcons: null
+        });
+        localStorage.removeItem('portalCustomColors');
+    };
+
+    // Helper functions for drive
+    const getFileIcon = (type, color = '#64748b', starred = false) => {
+        const iconStyle = { fontSize: '48px', color };
+        switch (type) {
+            case 'folder':
+                return <FolderOutlined style={iconStyle} />;
+            case 'chat':
+                return <div style={{ ...iconStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '48px', height: '48px', borderRadius: '12px', background: color }}>💬</div>;
+            case 'document':
+                return <div style={{ ...iconStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '48px', height: '48px', borderRadius: '12px', background: color }}>📄</div>;
+            case 'board':
+                return <div style={{ ...iconStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '48px', height: '48px', borderRadius: '12px', background: color }}>📋</div>;
+            default:
+                return <FileOutlined style={iconStyle} />;
+        }
+    };
+
+    const getSmallFileIcon = (type, color = '#64748b') => {
+        const iconStyle = { fontSize: '16px', color };
+        switch (type) {
+            case 'folder':
+                return <FolderOutlined style={iconStyle} />;
+            case 'chat':
+                return <span style={{ fontSize: '16px' }}>💬</span>;
+            case 'document':
+                return <span style={{ fontSize: '16px' }}>📄</span>;
+            case 'board':
+                return <span style={{ fontSize: '16px' }}>📋</span>;
+            default:
+                return <FileOutlined style={iconStyle} />;
+        }
+    };
+
+    const renderCollaborators = (collaborators = []) => {
+        return collaborators.map((initial, index) => (
+            <div key={index} style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                background: `hsl(${index * 60}, 70%, 50%)`,
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '12px',
+                fontWeight: 'bold',
+                marginLeft: index > 0 ? '-8px' : '0',
+                border: '2px solid white',
+                zIndex: collaborators.length - index
+            }}>
+                {initial}
+            </div>
+        ));
+    };
+
     const [selectedDate, setSelectedDate] = useState(null);
     const [form] = Form.useForm();
 
@@ -1032,247 +1143,225 @@ const Portal = () => {
     };
 
     const renderDrive = () => (
-        <div className="portal-drive">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                <Title level={2} style={{ margin: 0, color: '#1f2937' }}>Media Drive</Title>
-                <Button type="primary" icon={<UploadOutlined />} style={{ background: primaryColor, borderColor: primaryColor }}>
-                    Upload Files
+        <div style={{ display: 'flex', height: 'calc(100vh - 140px)', gap: 0 }}>
+            {/* Left Sidebar */}
+            <div style={{
+                width: '280px',
+                background: '#fafbfc',
+                borderRight: '1px solid #e9ecef',
+                padding: '20px',
+                overflowY: 'auto'
+            }}>
+                {/* Filter Button */}
+                <Button
+                    icon={<span>🔽</span>}
+                    style={{
+                        marginBottom: '20px',
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#64748b',
+                        padding: '4px 8px'
+                    }}
+                >
+                    Filter
                 </Button>
-            </div>
 
-            {/* Drive Navigation Tabs */}
-            <div style={{ marginBottom: 24 }}>
-                <div style={{
-                    display: 'flex',
-                    gap: '8px',
-                    background: '#f8fafc',
-                    padding: '4px',
-                    borderRadius: '12px',
-                    width: 'fit-content'
-                }}>
-                    {[
-                        { key: 'dashboard', label: 'Dashboard', icon: <DashboardOutlined /> },
-                        { key: 'drive', label: 'Drive', icon: <CloudOutlined /> },
-                        { key: 'calendar', label: 'Calendar', icon: <CalendarOutlined /> }
-                    ].map(tab => (
-                        <Button
-                            key={tab.key}
-                            type={driveTab === tab.key ? 'primary' : 'text'}
-                            icon={tab.icon}
-                            onClick={() => setDriveTab(tab.key)}
-                            style={{
-                                background: driveTab === tab.key ? primaryColor : 'transparent',
-                                borderColor: driveTab === tab.key ? primaryColor : 'transparent',
-                                color: driveTab === tab.key ? 'white' : '#64748b',
-                                borderRadius: '8px'
-                            }}
-                        >
-                            {tab.label}
-                        </Button>
+                {/* Quick Access */}
+                <div style={{ marginBottom: '24px' }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '12px',
+                        color: '#64748b',
+                        fontSize: '14px',
+                        fontWeight: '600'
+                    }}>
+                        <span>▽</span> Quick access
+                    </div>
+                    {driveData.quickAccess.map(item => (
+                        <div key={item.key} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            marginBottom: '4px',
+                            ':hover': { background: '#f1f5f9' }
+                        }}>
+                            {getSmallFileIcon(item.type)}
+                            <Text style={{ fontSize: '14px', color: '#374151' }}>{item.name}</Text>
+                        </div>
+                    ))}
+                </div>
+
+                {/* All Files */}
+                <div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '12px',
+                        color: '#64748b',
+                        fontSize: '14px',
+                        fontWeight: '600'
+                    }}>
+                        <span>▽</span> All Files
+                    </div>
+                    {driveData.allFiles.map(item => (
+                        <div key={item.key} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '8px 12px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            marginBottom: '4px',
+                            ':hover': { background: '#f1f5f9' }
+                        }}>
+                            {getSmallFileIcon(item.type)}
+                            <Text style={{ fontSize: '14px', color: '#374151' }}>{item.name}</Text>
+                        </div>
                     ))}
                 </div>
             </div>
 
-            {/* Drive Tab Content */}
-            {driveTab === 'dashboard' && (
-                <Row gutter={[24, 24]}>
-                    {/* Storage Overview */}
-                    <Col xs={24} lg={8}>
-                        <Card
-                            title="Storage Overview"
-                            style={{
-                                borderRadius: '16px',
-                                border: '1px solid #f1f5f9',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-                            }}
-                        >
-                            <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                                <div style={{
-                                    width: 120,
-                                    height: 120,
-                                    margin: '0 auto',
-                                    position: 'relative'
-                                }}>
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={[
-                                                    { name: 'Used', value: 45.8 },
-                                                    { name: 'Free', value: 54.2 }
-                                                ]}
-                                                cx="50%"
-                                                cy="50%"
-                                                innerRadius={35}
-                                                outerRadius={55}
-                                                dataKey="value"
-                                            >
-                                                <Cell fill={primaryColor} />
-                                                <Cell fill="#f1f5f9" />
-                                            </Pie>
-                                        </PieChart>
-                                    </ResponsiveContainer>
+            {/* Main Content */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                {/* Header */}
+                <div style={{
+                    padding: '20px 24px',
+                    borderBottom: '1px solid #e9ecef',
+                    background: 'white'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', gap: '12px' }}>
+                            <Button type="primary" icon={<FolderOutlined />} style={{ background: '#3b82f6', borderColor: '#3b82f6' }}>
+                                New Folder
+                            </Button>
+                            <Button icon={<span>💬</span>} style={{ background: '#10b981', borderColor: '#10b981', color: 'white' }}>
+                                New Chat
+                            </Button>
+                            <Button icon={<span>📋</span>} style={{ background: '#8b5cf6', borderColor: '#8b5cf6', color: 'white' }}>
+                                New Board
+                            </Button>
+                            <Button icon={<FileOutlined />} style={{ background: '#06b6d4', borderColor: '#06b6d4', color: 'white' }}>
+                                New Document
+                            </Button>
+                            <Button icon={<UploadOutlined />} style={{ background: '#ec4899', borderColor: '#ec4899', color: 'white' }}>
+                                Import
+                            </Button>
+                        </div>
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                            <Button type="text" icon={<span>☰</span>} />
+                            <Button type="text" icon={<span>⊞</span>} />
+                        </div>
+                    </div>
+
+                    {/* Filter Tabs */}
+                    <div style={{ display: 'flex', gap: '24px' }}>
+                        {[
+                            { key: 'All', count: 30 },
+                            { key: 'Folder', count: 15 },
+                            { key: 'Chat', count: 5 },
+                            { key: 'Board', count: 5 },
+                            { key: 'Document', count: 5 }
+                        ].map(tab => (
+                            <Button
+                                key={tab.key}
+                                type="text"
+                                onClick={() => setDriveFilter(tab.key)}
+                                style={{
+                                    color: driveFilter === tab.key ? primaryColor : '#64748b',
+                                    fontWeight: driveFilter === tab.key ? '600' : '400',
+                                    borderBottom: driveFilter === tab.key ? `2px solid ${primaryColor}` : 'none',
+                                    borderRadius: 0,
+                                    padding: '8px 0'
+                                }}
+                            >
+                                {tab.key} {tab.count}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Grid Content */}
+                <div style={{
+                    flex: 1,
+                    padding: '24px',
+                    background: '#fafbfc',
+                    overflowY: 'auto'
+                }}>
+                    <Row gutter={[24, 24]}>
+                        {driveData.folders.map(folder => (
+                            <Col xs={12} sm={8} md={6} lg={4} key={folder.key}>
+                                <Card
+                                    hoverable
+                                    style={{
+                                        borderRadius: '12px',
+                                        border: '1px solid #e9ecef',
+                                        position: 'relative',
+                                        cursor: 'pointer'
+                                    }}
+                                    bodyStyle={{ padding: '20px 16px' }}
+                                    actions={[
+                                        <Button type="text" icon={<EyeOutlined />} size="small" />,
+                                        <Button type="text" icon={<DownloadOutlined />} size="small" />,
+                                        <Button type="text" icon={<EditOutlined />} size="small" />
+                                    ]}
+                                >
+                                    {folder.starred && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '12px',
+                                            left: '12px',
+                                            color: '#f59e0b',
+                                            fontSize: '16px'
+                                        }}>
+                                            ⭐
+                                        </div>
+                                    )}
                                     <div style={{
                                         position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        textAlign: 'center'
+                                        top: '12px',
+                                        right: '12px',
+                                        color: '#64748b',
+                                        fontSize: '16px',
+                                        cursor: 'pointer'
                                     }}>
-                                        <div style={{ fontSize: '18px', fontWeight: 'bold' }}>45.8GB</div>
-                                        <div style={{ fontSize: '12px', color: '#64748b' }}>of 100GB</div>
+                                        ⋯
                                     </div>
-                                </div>
-                            </div>
-                            <div style={{ space: 16 }}>
-                                {driveStats.slice(1).map((stat, index) => (
-                                    <div key={index} style={{ marginBottom: 16 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                                            <Text style={{ color: '#64748b' }}>{stat.label}</Text>
-                                            <Text strong>{stat.value}</Text>
-                                        </div>
+
+                                    <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                                        {getFileIcon(folder.type, folder.color)}
+                                    </div>
+
+                                    <div style={{ textAlign: 'center' }}>
+                                        <Text strong style={{ display: 'block', marginBottom: '4px', fontSize: '14px' }}>
+                                            {folder.name}
+                                        </Text>
+                                        <Text style={{ color: '#64748b', fontSize: '12px', display: 'block', marginBottom: '8px' }}>
+                                            {folder.type === 'folder' ? 'Folder' :
+                                                folder.type === 'chat' ? 'Chat' :
+                                                    folder.type === 'document' ? 'Document' : 'Board'} • {folder.items} items
+                                        </Text>
+
                                         <div style={{
-                                            width: '100%',
-                                            height: 6,
-                                            background: '#f1f5f9',
-                                            borderRadius: 3,
-                                            overflow: 'hidden'
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            gap: '4px'
                                         }}>
-                                            <div style={{
-                                                width: `${stat.percentage}%`,
-                                                height: '100%',
-                                                background: stat.color,
-                                                borderRadius: 3
-                                            }} />
+                                            {renderCollaborators(folder.collaborators)}
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </Card>
-                    </Col>
-
-                    {/* Recent Files */}
-                    <Col xs={24} lg={16}>
-                        <Card
-                            title="Recent Files"
-                            extra={<Button type="link" style={{ color: primaryColor }}>View All</Button>}
-                            style={{
-                                borderRadius: '16px',
-                                border: '1px solid #f1f5f9',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-                            }}
-                        >
-                            <List
-                                dataSource={driveData.slice(0, 5)}
-                                renderItem={(item) => (
-                                    <List.Item
-                                        actions={[
-                                            <Button type="text" icon={<EyeOutlined />} size="small" />,
-                                            <Button type="text" icon={<DownloadOutlined />} size="small" />
-                                        ]}
-                                    >
-                                        <List.Item.Meta
-                                            avatar={item.icon}
-                                            title={<Text strong>{item.name}</Text>}
-                                            description={
-                                                <div style={{ color: '#64748b' }}>
-                                                    {item.size} • Modified {item.modified}
-                                                    {item.items && ` • ${item.items} items`}
-                                                </div>
-                                            }
-                                        />
-                                    </List.Item>
-                                )}
-                            />
-                        </Card>
-                    </Col>
-                </Row>
-            )}
-
-            {driveTab === 'drive' && (
-                <Card
-                    title="All Files"
-                    extra={
-                        <Space>
-                            <Button type="text" icon={<FolderOutlined />}>New Folder</Button>
-                            <Button type="primary" icon={<UploadOutlined />} style={{ background: primaryColor, borderColor: primaryColor }}>
-                                Upload
-                            </Button>
-                        </Space>
-                    }
-                    style={{
-                        borderRadius: '16px',
-                        border: '1px solid #f1f5f9',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-                    }}
-                >
-                    <Table
-                        dataSource={driveData}
-                        pagination={false}
-                        columns={[
-                            {
-                                title: 'Name',
-                                dataIndex: 'name',
-                                key: 'name',
-                                render: (text, record) => (
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        {record.icon}
-                                        <Text strong>{text}</Text>
-                                    </div>
-                                )
-                            },
-                            {
-                                title: 'Size',
-                                dataIndex: 'size',
-                                key: 'size',
-                                render: (text) => <Text>{text}</Text>
-                            },
-                            {
-                                title: 'Modified',
-                                dataIndex: 'modified',
-                                key: 'modified',
-                                render: (text) => <Text style={{ color: '#64748b' }}>{text}</Text>
-                            },
-                            {
-                                title: 'Actions',
-                                key: 'actions',
-                                render: () => (
-                                    <Space>
-                                        <Button type="text" icon={<EyeOutlined />} size="small" />
-                                        <Button type="text" icon={<DownloadOutlined />} size="small" />
-                                        <Button type="text" icon={<EditOutlined />} size="small" />
-                                    </Space>
-                                )
-                            }
-                        ]}
-                    />
-                </Card>
-            )}
-
-            {driveTab === 'calendar' && (
-                <Card
-                    title="Calendar View"
-                    style={{
-                        borderRadius: '16px',
-                        border: '1px solid #f1f5f9',
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-                    }}
-                >
-                    <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-                        <CalendarOutlined style={{ fontSize: 48, color: primaryColor, marginBottom: 16 }} />
-                        <Title level={4} style={{ color: '#64748b' }}>Calendar Integration</Title>
-                        <Text style={{ color: '#64748b' }}>
-                            Schedule and manage your file sharing sessions, deadlines, and collaboration events.
-                        </Text>
-                        <br />
-                        <Button
-                            type="primary"
-                            style={{ background: primaryColor, borderColor: primaryColor, marginTop: 16 }}
-                        >
-                            Go to Main Calendar
-                        </Button>
-                    </div>
-                </Card>
-            )}
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            </div>
         </div>
     );
 
@@ -1364,8 +1453,8 @@ const Portal = () => {
                     {!collapsed ? (
                         <>
                             <div className="logo-icon" style={{
-                                background: secondaryColor,
-                                color: secondaryTextColor
+                                background: logoBackgroundColor,
+                                color: logoTextColor
                             }}>
                                 {userData.logoPreview || userData.uploadedLogoUrl ? (
                                     <img
@@ -1378,15 +1467,15 @@ const Portal = () => {
                                 )}
                             </div>
                             <span className="brand-name" style={{
-                                color: primaryTextColor
+                                color: logoTextColor
                             }}>
                                 {userData.brandName || 'Craxinno'}
                             </span>
                         </>
                     ) : (
                         <div className="logo-icon" style={{
-                            background: secondaryColor,
-                            color: secondaryTextColor
+                            background: logoBackgroundColor,
+                            color: logoTextColor
                         }}>
                             {userData.logoPreview || userData.uploadedLogoUrl ? (
                                 <img
@@ -1409,9 +1498,9 @@ const Portal = () => {
                     onClick={({ key }) => setSelectedKey(key)}
                     className="portal-menu"
                     style={{
-                        background: 'transparent',
+                        background: sidebarLinksBgColor,
                         border: 'none',
-                        color: primaryTextColor
+                        color: sidebarLinksColor
                     }}
                 />
             </Sider>
@@ -1424,11 +1513,11 @@ const Portal = () => {
                     <div className="header-left">
                         <Button
                             type="text"
-                            icon={collapsed ? <MenuUnfoldOutlined style={{ color: "white" }} /> : <MenuFoldOutlined style={{ color: "white" }} />}
+                            icon={collapsed ? <MenuUnfoldOutlined style={{ color: topBarIconsColor }} /> : <MenuFoldOutlined style={{ color: topBarIconsColor }} />}
                             onClick={() => setCollapsed(!collapsed)}
                             className="trigger-btn"
                             style={{
-                                color: primaryTextColor
+                                color: topBarIconsColor
                             }}
                         />
                     </div>
@@ -1441,7 +1530,7 @@ const Portal = () => {
                                     icon={<BellOutlined />}
                                     className="notification-btn"
                                     style={{
-                                        color: primaryTextColor
+                                        color: topBarIconsColor
                                     }}
                                 />
                             </Badge>
@@ -1463,7 +1552,7 @@ const Portal = () => {
                                         color: secondaryTextColor
                                     }} />
                                     <Text strong style={{
-                                        color: primaryTextColor
+                                        color: topBarIconsColor
                                     }}>John Doe</Text>
                                 </Space>
                             </Dropdown>
@@ -1646,6 +1735,298 @@ const Portal = () => {
                     </div>
                 </div>
             )}
+
+            {/* Floating Customization Button */}
+            <Button
+                type="primary"
+                shape="circle"
+                size="large"
+                icon={<SettingOutlined />}
+                onClick={() => setCustomizationOpen(true)}
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    width: '60px',
+                    height: '60px',
+                    background: primaryColor,
+                    borderColor: primaryColor,
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            />
+
+            {/* Enhanced Customization Drawer */}
+            <Drawer
+                title="Portal Customization"
+                placement="right"
+                onClose={() => setCustomizationOpen(false)}
+                open={customizationOpen}
+                width={400}
+                bodyStyle={{ padding: '24px' }}
+            >
+                {/* Sidebar Customization */}
+                <div style={{ marginBottom: 32 }}>
+                    <Typography.Title level={4} style={{ marginBottom: 16, color: primaryColor }}>
+                        🎨 Sidebar Customization
+                    </Typography.Title>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Sidebar Background Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.sidebarBg || primaryColor}
+                            onChange={(color) => handleColorChange('sidebarBg', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Sidebar Text Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.sidebarText || primaryTextColor}
+                            onChange={(color) => handleColorChange('sidebarText', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Links Background Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.sidebarLinksBg || 'transparent'}
+                            onChange={(color) => handleColorChange('sidebarLinksBg', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Links Text Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.sidebarLinksText || sidebarLinksColor}
+                            onChange={(color) => handleColorChange('sidebarLinksText', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Links Hover Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.sidebarLinksHover || sidebarLinksHoverColor}
+                            onChange={(color) => handleColorChange('sidebarLinksHover', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                </div>
+
+                {/* Logo Customization */}
+                <div style={{ marginBottom: 32 }}>
+                    <Typography.Title level={4} style={{ marginBottom: 16, color: primaryColor }}>
+                        🏷️ Logo Customization
+                    </Typography.Title>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Logo Background Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.logoBackground || logoBackgroundColor}
+                            onChange={(color) => handleColorChange('logoBackground', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Logo Text Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.logoText || logoTextColor}
+                            onChange={(color) => handleColorChange('logoText', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                </div>
+
+                {/* Top Bar Customization */}
+                <div style={{ marginBottom: 32 }}>
+                    <Typography.Title level={4} style={{ marginBottom: 16, color: primaryColor }}>
+                        📱 Top Bar Customization
+                    </Typography.Title>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Top Bar Background Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.topBarBg || secondaryColor}
+                            onChange={(color) => handleColorChange('topBarBg', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Top Bar Text Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.topBarText || secondaryTextColor}
+                            onChange={(color) => handleColorChange('topBarText', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            Top Bar Icons Color
+                        </Typography.Text>
+                        <ColorPicker
+                            value={customColors.topBarIcons || topBarIconsColor}
+                            onChange={(color) => handleColorChange('topBarIcons', color)}
+                            showText
+                            size="large"
+                            style={{ width: '100%' }}
+                        />
+                    </div>
+                </div>
+
+                {/* Live Preview */}
+                <div style={{ marginBottom: 24 }}>
+                    <Typography.Title level={4} style={{ marginBottom: 16, color: primaryColor }}>
+                        👀 Live Preview
+                    </Typography.Title>
+                    <div style={{
+                        border: '1px solid #e9ecef',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        minHeight: '120px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}>
+                        {/* Mini Sidebar Preview */}
+                        <div style={{
+                            background: customColors.sidebarBg || primaryColor,
+                            color: customColors.sidebarText || primaryTextColor,
+                            padding: '12px',
+                            fontSize: '13px',
+                            fontWeight: '500',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}>
+                            {/* Logo Preview */}
+                            <div style={{
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '6px',
+                                background: customColors.logoBackground || logoBackgroundColor,
+                                color: customColors.logoText || logoTextColor,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '10px',
+                                fontWeight: 'bold'
+                            }}>
+                                {userData.brandName ? userData.brandName.substring(0, 2).toUpperCase() : 'CX'}
+                            </div>
+                            <span style={{ color: customColors.logoText || logoTextColor }}>
+                                {userData.brandName || 'Craxinno'}
+                            </span>
+                        </div>
+
+                        {/* Menu Links Preview */}
+                        <div style={{
+                            background: customColors.sidebarBg || primaryColor,
+                            padding: '8px 12px'
+                        }}>
+                            <div style={{
+                                background: customColors.sidebarLinksBg || 'transparent',
+                                color: customColors.sidebarLinksText || sidebarLinksColor,
+                                padding: '6px 8px',
+                                borderRadius: '4px',
+                                fontSize: '12px',
+                                marginBottom: '4px'
+                            }}>
+                                🏠 Dashboard
+                            </div>
+                            <div style={{
+                                background: customColors.sidebarLinksBg || 'transparent',
+                                color: customColors.sidebarLinksText || sidebarLinksColor,
+                                padding: '6px 8px',
+                                borderRadius: '4px',
+                                fontSize: '12px'
+                            }}>
+                                ☁️ Drive
+                            </div>
+                        </div>
+
+                        {/* Mini Top Bar Preview */}
+                        <div style={{
+                            background: customColors.topBarBg || secondaryColor,
+                            color: customColors.topBarText || secondaryTextColor,
+                            padding: '12px',
+                            fontSize: '12px',
+                            fontWeight: '500',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <span>Portal Header</span>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <span style={{ color: customColors.topBarIcons || topBarIconsColor }}>☰</span>
+                                <span style={{ color: customColors.topBarIcons || topBarIconsColor }}>🔔</span>
+                                <span style={{ color: customColors.topBarIcons || topBarIconsColor }}>👤</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+                    <Button onClick={resetColors} size="large" style={{ flex: 1, marginRight: 8 }}>
+                        🔄 Reset to Default
+                    </Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={() => {
+                            message.success('🎨 Portal colors saved successfully!');
+                            setCustomizationOpen(false);
+                        }}
+                        style={{ flex: 1, background: primaryColor, borderColor: primaryColor }}
+                    >
+                        💾 Save Changes
+                    </Button>
+                </Space>
+            </Drawer>
         </Layout>
     );
 };
