@@ -41,6 +41,15 @@ const DynamicContextState = ({ children }) => {
   const [sessionInitializing, setSessionInitializing] = useState(false);
   const [sessionError, setSessionError] = useState("");
 
+  // Portal tracking state
+  const [portalId, setPortalId] = useState(null);
+  const [portalSubdomain, setPortalSubdomain] = useState("");
+  const [portalStatus, setPortalStatus] = useState("");
+  const [portalCurrentStep, setPortalCurrentStep] = useState("");
+  const [portalNextStepUrl, setPortalNextStepUrl] = useState("");
+  const [portalInitializing, setPortalInitializing] = useState(false);
+  const [portalError, setPortalError] = useState("");
+
   const steps = [
     { id: 0, name: "Logo & Branding", component: "LogoUpload" },
     { id: 1, name: "Select Industry", component: "SelectIndustry" },
@@ -350,6 +359,67 @@ const DynamicContextState = ({ children }) => {
     return false;
   };
 
+  // Function to initialize portal creation process
+  const initializePortal = async () => {
+    try {
+      setPortalInitializing(true);
+      setPortalError("");
+
+      // Generate subdomain from brandName
+      const subdomain = brandName
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+
+      if (subdomain.length < 3) {
+        throw new Error(
+          "Brand name must be at least 3 characters long to generate subdomain"
+        );
+      }
+
+      const response = await axios.post(
+        `${API_BASE_URL}/website/tracking/portal/initialize`,
+        {
+          sessionId,
+          deviceId,
+          ipId,
+          subdomain,
+          tier: "premium",
+        }
+      );
+
+      if (response.data.success && response.data.data) {
+        const {
+          portalId: newPortalId,
+          subdomain: newSubdomain,
+          status: newStatus,
+          currentStep: newCurrentStep,
+          nextStepUrl: newNextStepUrl,
+        } = response.data.data;
+
+        setPortalId(newPortalId);
+        setPortalSubdomain(newSubdomain);
+        setPortalStatus(newStatus);
+        setPortalCurrentStep(newCurrentStep);
+        setPortalNextStepUrl(newNextStepUrl);
+
+        return response.data.data;
+      } else {
+        throw new Error("Invalid portal API response format");
+      }
+    } catch (error) {
+      console.error("Error initializing portal:", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to initialize portal";
+      setPortalError(errorMessage);
+      throw error;
+    } finally {
+      setPortalInitializing(false);
+    }
+  };
+
   // Clear selected modules when industry changes
   useEffect(() => {
     if (selectedIndustry) {
@@ -412,8 +482,28 @@ const DynamicContextState = ({ children }) => {
     initializeSessionTracking();
   }, []);
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length - 1) {
+      // If we're on the logo upload step (step 0) and have a brand name, initialize portal
+      if (
+        currentStep === 0 &&
+        brandName &&
+        brandName.trim().length >= 3 &&
+        sessionId &&
+        deviceId &&
+        ipId &&
+        !portalId
+      ) {
+        try {
+          await initializePortal();
+          console.log("Portal initialized before proceeding to next step.");
+        } catch (error) {
+          console.error("Failed to initialize portal:", error);
+          // Don't proceed if portal initialization fails
+          return;
+        }
+      }
+
       const newStep = currentStep + 1;
       setCurrentStep(newStep);
       setStepHistory([...stepHistory, newStep]);
@@ -488,6 +578,15 @@ const DynamicContextState = ({ children }) => {
         initializeSession,
         getStoredSessionData,
         loadStoredSessionData,
+        // Portal tracking
+        portalId,
+        portalSubdomain,
+        portalStatus,
+        portalCurrentStep,
+        portalNextStepUrl,
+        portalInitializing,
+        portalError,
+        initializePortal,
       }}
     >
       {children}
