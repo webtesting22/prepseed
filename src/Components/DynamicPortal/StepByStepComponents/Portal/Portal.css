@@ -267,10 +267,12 @@
 }
 
 .portal-layout .content-wrapper {
-    padding: 24px;
+    padding: 20px;
     min-height: 100%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 1px solid #f0f0f0;
+    height: 60px;
+    overflow: auto;
 }
 
 /* Dashboard Specific Styles */
@@ -324,6 +326,10 @@
     font-size: 16px;
     font-weight: 600;
     color: #262626;
+}
+
+.portal-layout .ant-card-head{
+    padding: 20px 30px;
 }
 
 /* Button Styles */
