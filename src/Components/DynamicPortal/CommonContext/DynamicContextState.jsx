@@ -766,13 +766,18 @@ const DynamicContextState = ({ children }) => {
             let stepData = {
               // API expects modules array for step 4
               modules: selectedModules,
-              // Also include all identity data for completeness
+              // Additional module requirements
+              customModules: null, // Not implemented yet
+              integrations: null, // Not implemented yet
+              additionalRequirements: null, // Not implemented yet
+              // Include all identity data for completeness
               name: personalInfo.fullName,
               email: personalInfo.email,
               mobile: personalInfo.phone,
               organizationType: "company",
               ...personalInfo,
-              selectedIndustry: selectedIndustry
+              // Industry data (already saved in step 2)
+              industryType: selectedIndustry
                 ? {
                     _id: selectedIndustry._id,
                     name: selectedIndustry.name,
@@ -862,20 +867,24 @@ const DynamicContextState = ({ children }) => {
                       type: logoFile.type,
                     }
                   : null,
+                // Industry data will be saved in step 2 (CONTACT_DETAILS)
+                // No need to save it here since step 1 is for CLIENT_INFO_AND_LOGO
               };
               break;
 
             case 2: // Select Industry (when moving from step 1 to 2)
-              // API step 2: CONTACT_DETAILS - expects name, email, mobile
-              // But we don't have this data yet, so we'll skip this step for now
-              // and collect it later when we have the identity data
+              // API step 2: CONTACT_DETAILS - expects name, email, mobile, designation, alternateEmail
+              // This is where we save the personal information collected in the Identity step
               stepData = {
-                // Placeholder data to satisfy validation
-                name: "TBD",
-                email: "tbd@example.com",
-                mobile: "0000000000",
-                // Also include industry data
-                selectedIndustry: selectedIndustry
+                // Contact details as expected by backend
+                name: personalInfo.fullName || "TBD",
+                email: personalInfo.email || "tbd@example.com",
+                mobile: personalInfo.phone || "0000000000",
+                // Additional contact fields
+                designation: personalInfo.jobTitle || null,
+                alternateEmail: null, // Not collected in current form
+                // Industry data that should be saved
+                industryType: selectedIndustry
                   ? {
                       _id: selectedIndustry._id,
                       name: selectedIndustry.name,
@@ -886,12 +895,23 @@ const DynamicContextState = ({ children }) => {
               break;
 
             case 3: // Select Modules (when moving from step 2 to 3)
-              // API step 3: ORGANIZATION_TYPE - expects organizationType
+              // API step 3: ORGANIZATION_TYPE - expects organizationType, organizationDetails, industryType, companySize
               stepData = {
                 organizationType: "company", // Default to company type
-                // Also include modules data
-                selectedModules: selectedModules,
-                selectedIndustry: selectedIndustry
+                // Organization details
+                organizationDetails: {
+                  modules: selectedModules,
+                  industry: selectedIndustry
+                    ? {
+                        _id: selectedIndustry._id,
+                        name: selectedIndustry.name,
+                      }
+                    : null,
+                },
+                // Company size from personal info
+                companySize: personalInfo.companySize || null,
+                // Industry type (already saved in step 2, but including for completeness)
+                industryType: selectedIndustry
                   ? {
                       _id: selectedIndustry._id,
                       name: selectedIndustry.name,
@@ -905,13 +925,18 @@ const DynamicContextState = ({ children }) => {
               stepData = {
                 // API expects modules array for step 4
                 modules: selectedModules,
-                // Also include all identity data for completeness
+                // Additional module requirements
+                customModules: null, // Not implemented yet
+                integrations: null, // Not implemented yet
+                additionalRequirements: null, // Not implemented yet
+                // Include all identity data for completeness
                 name: personalInfo.fullName,
                 email: personalInfo.email,
                 mobile: personalInfo.phone,
                 organizationType: "company",
                 ...personalInfo,
-                selectedIndustry: selectedIndustry
+                // Industry data (already saved in step 2)
+                industryType: selectedIndustry
                   ? {
                       _id: selectedIndustry._id,
                       name: selectedIndustry.name,
@@ -934,8 +959,16 @@ const DynamicContextState = ({ children }) => {
           }
 
           // Update portal step (step numbers are 1-based for API)
-          await updatePortalStep(currentStep + 1, stepData, currentPortalId);
-          console.log(`Portal step ${currentStep + 1} updated successfully.`);
+          console.log(`Sending data for step ${currentStep + 1}:`, stepData);
+          const result = await updatePortalStep(
+            currentStep + 1,
+            stepData,
+            currentPortalId
+          );
+          console.log(
+            `Portal step ${currentStep + 1} updated successfully. Result:`,
+            result
+          );
         } catch (error) {
           console.error("Failed to update portal step:", error);
           // Don't proceed if portal step update fails
