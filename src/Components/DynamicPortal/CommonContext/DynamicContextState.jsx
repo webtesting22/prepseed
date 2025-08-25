@@ -50,6 +50,16 @@ const DynamicContextState = ({ children }) => {
   const [portalInitializing, setPortalInitializing] = useState(false);
   const [portalError, setPortalError] = useState("");
 
+  // Identity state
+  const [identityData, setIdentityData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    companyName: "",
+    jobTitle: "",
+    companySize: "",
+  });
+
   const steps = [
     { id: 0, name: "Logo & Branding", component: "LogoUpload" },
     { id: 1, name: "Select Industry", component: "SelectIndustry" },
@@ -420,6 +430,53 @@ const DynamicContextState = ({ children }) => {
     }
   };
 
+  // Function to update portal step data
+  const updatePortalStep = async (stepNumber, stepData) => {
+    try {
+      if (!portalId) {
+        throw new Error("Portal ID not found. Please initialize portal first.");
+      }
+
+      // Include session data required by validateSession middleware
+      const requestBody = {
+        ...stepData,
+        sessionId,
+        deviceId,
+        ipId,
+      };
+
+      const response = await axios.put(
+        `${API_BASE_URL}/website/tracking/portal/${portalId}/step/${stepNumber}`,
+        requestBody
+      );
+
+      if (response.data.success && response.data.data) {
+        // Update portal status if returned
+        if (response.data.data.status) {
+          setPortalStatus(response.data.data.status);
+        }
+        if (response.data.data.currentStep) {
+          setPortalCurrentStep(response.data.data.currentStep);
+        }
+        if (response.data.data.nextStepUrl) {
+          setPortalNextStepUrl(response.data.data.nextStepUrl);
+        }
+
+        return response.data.data;
+      } else {
+        throw new Error("Invalid portal step update response format");
+      }
+    } catch (error) {
+      console.error("Error updating portal step:", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to update portal step";
+      setPortalError(errorMessage);
+      throw error;
+    }
+  };
+
   // Clear selected modules when industry changes
   useEffect(() => {
     if (selectedIndustry) {
@@ -500,6 +557,104 @@ const DynamicContextState = ({ children }) => {
         } catch (error) {
           console.error("Failed to initialize portal:", error);
           // Don't proceed if portal initialization fails
+          return;
+        }
+      }
+
+      // Update portal step data before proceeding
+      if (portalId) {
+        try {
+          let stepData = {};
+
+          // Collect data for the step we're moving TO (next step)
+          // Map frontend steps to API step numbers based on validation requirements
+          switch (currentStep + 1) {
+            case 1: // Logo & Branding (when moving from step 0 to 1)
+              // API step 1: CLIENT_INFO_AND_LOGO - expects companyName
+              stepData = {
+                logoUrl: uploadedLogoUrl,
+                companyName: brandName, // API expects companyName, not brandName
+                brandName: brandName, // Keep brandName for backward compatibility
+                extractedColors: extractedColors,
+                selectedColors: selectedColors,
+                logoFile: logoFile
+                  ? {
+                      name: logoFile.name,
+                      size: logoFile.size,
+                      type: logoFile.type,
+                    }
+                  : null,
+              };
+              break;
+
+            case 2: // Select Industry (when moving from step 1 to 2)
+              // API step 2: CONTACT_DETAILS - expects name, email, mobile
+              // But we don't have this data yet, so we'll skip this step for now
+              // and collect it later when we have the identity data
+              stepData = {
+                // Placeholder data to satisfy validation
+                name: "TBD",
+                email: "tbd@example.com",
+                mobile: "0000000000",
+                // Also include industry data
+                selectedIndustry: selectedIndustry
+                  ? {
+                      _id: selectedIndustry._id,
+                      name: selectedIndustry.name,
+                      description: selectedIndustry.description,
+                    }
+                  : null,
+              };
+              break;
+
+            case 3: // Select Modules (when moving from step 2 to 3)
+              // API step 3: ORGANIZATION_TYPE - expects organizationType
+              stepData = {
+                organizationType: "company", // Default to company type
+                // Also include modules data
+                selectedModules: selectedModules,
+                selectedIndustry: selectedIndustry
+                  ? {
+                      _id: selectedIndustry._id,
+                      name: selectedIndustry.name,
+                    }
+                  : null,
+              };
+              break;
+
+            case 4: // Identity (when moving from step 3 to 4)
+              // API step 4: MODULE_SELECTION - expects modules array
+              stepData = {
+                // API expects modules array for step 4
+                modules: selectedModules,
+                // Also include all identity data for completeness
+                name: identityData.fullName,
+                email: identityData.email,
+                mobile: identityData.phone,
+                organizationType: "company",
+                ...identityData,
+                selectedIndustry: selectedIndustry
+                  ? {
+                      _id: selectedIndustry._id,
+                      name: selectedIndustry.name,
+                    }
+                  : null,
+                brandName: brandName,
+                logoUrl: uploadedLogoUrl,
+                selectedColors: selectedColors,
+              };
+              break;
+
+            default:
+              stepData = {};
+          }
+
+          // Update portal step (step numbers are 1-based for API)
+          await updatePortalStep(currentStep + 1, stepData);
+          console.log(`Portal step ${currentStep + 1} updated successfully.`);
+        } catch (error) {
+          console.error("Failed to update portal step:", error);
+          // Don't proceed if portal step update fails
           return;
         }
       }
@@ -587,6 +742,10 @@ const DynamicContextState = ({ children }) => {
         portalInitializing,
         portalError,
         initializePortal,
+        updatePortalStep,
+        // Identity
+        identityData,
+        setIdentityData,
       }}
     >
       {children}
