@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState }, { useContext } from "react";
+import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const IdentityContainer = () => {
@@ -27,6 +28,7 @@ const IdentityContainer = () => {
     "500+ employees",
   ];
 
+    const { personalInfo, updatePersonalInfo } = useContext(DynamicPortalContext);
   return (
     <div style={{ padding: "24px" }}>
       <div style={{ marginBottom: "32px" }}>
@@ -83,6 +85,8 @@ const IdentityContainer = () => {
                 value={identityData.fullName}
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
                 placeholder="Enter your full name"
+                                value={personalInfo.fullName}
+                                onChange={(e) => updatePersonalInfo('fullName', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -114,6 +118,8 @@ const IdentityContainer = () => {
                 value={identityData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 placeholder="Enter your email address"
+                                value={personalInfo.email}
+                                onChange={(e) => updatePersonalInfo('email', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -145,6 +151,8 @@ const IdentityContainer = () => {
                 value={identityData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
                 placeholder="Enter your phone number"
+                                value={personalInfo.phone}
+                                onChange={(e) => updatePersonalInfo('phone', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -158,10 +166,47 @@ const IdentityContainer = () => {
                 onBlur={(e) => (e.target.style.borderColor = "#d1d5db")}
               />
             </div>
+                        <div>
+                        <div>
+                            <label style={{
+                                display: 'block',
+                                fontSize: '14px',
+                                fontWeight: '500',
+                                color: '#374151',
+                                marginBottom: '6px'
+                            }}>
+                                Company Size
+                            </label>
+                            <select
+                                value={personalInfo.companySize}
+                                onChange={(e) => updatePersonalInfo('companySize', e.target.value)}
+                                style={{
+                                    width: '90%',
+                                    padding: '12px 16px',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '6px',
+                                    fontSize: '14px',
+                                    transition: 'border-color 0.2s',
+                                    background: 'white'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                            >
+                                <option value="">Select company size</option>
+                                <option value="1-10">1-10 employees</option>
+                                <option value="11-50">11-50 employees</option>
+                                <option value="51-200">51-200 employees</option>
+                                <option value="201-1000">201-1000 employees</option>
+                                <option value="1000+">1000+ employees</option>
+                            </select>
+                        </div>
+                        </div>
           </div>
         </div>
 
         {/* Company Information */}
+                {/* Company Information section temporarily hidden */}
+                {false && (
         <div>
           <h3
             style={{
@@ -193,6 +238,8 @@ const IdentityContainer = () => {
                   handleInputChange("companyName", e.target.value)
                 }
                 placeholder="Enter your company name"
+                                value={personalInfo.companyName}
+                                onChange={(e) => updatePersonalInfo('companyName', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -224,6 +271,8 @@ const IdentityContainer = () => {
                 value={identityData.jobTitle}
                 onChange={(e) => handleInputChange("jobTitle", e.target.value)}
                 placeholder="Enter your job title"
+                                value={personalInfo.jobTitle}
+                                onChange={(e) => updatePersonalInfo('jobTitle', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -255,6 +304,8 @@ const IdentityContainer = () => {
                 onChange={(e) =>
                   handleInputChange("companySize", e.target.value)
                 }
+                                value={personalInfo.companySize}
+                                onChange={(e) => updatePersonalInfo('companySize', e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -324,6 +375,7 @@ const IdentityContainer = () => {
               <span style={{ fontWeight: "500", color: "#1e293b" }}>
                 {uploadedLogoUrl ? "Uploaded" : "Not uploaded"}
               </span>
+                )}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ color: "#64748b" }}>Colors:</span>

@@ -14,6 +14,7 @@ import NotFound from '../NotFound/NotFound';
 import ResetPassword from '../ResetPassword/ResetPassword';
 
 import WrapIndex from '../DynamicPortal/StepByStepComponents/WrapIndex';
+import Portal from '../DynamicPortal/StepByStepComponents/Portal/Portal';
 const AnimatedRoutes = () => {
     const location = useLocation();
 
@@ -106,6 +107,14 @@ const AnimatedRoutes = () => {
                     element={
                         <PageTransition>
                             <NotFound />
+                        </PageTransition>
+                    }
+                />
+                <Route
+                    path="/portal"
+                    element={
+                        <PageTransition>
+                            <Portal />
                         </PageTransition>
                     }
                 />
