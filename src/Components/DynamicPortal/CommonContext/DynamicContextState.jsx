@@ -539,6 +539,40 @@ const DynamicContextState = ({ children }) => {
     }
   };
 
+  // Function to update contact details after Identity step is completed
+  const updateContactDetails = async () => {
+    if (!portalId) {
+      console.warn("No portal ID available to update contact details");
+      return;
+    }
+
+    try {
+      // Update step 2 (CONTACT_DETAILS) with the actual personal information
+      const contactData = {
+        name: personalInfo.fullName,
+        email: personalInfo.email,
+        mobile: personalInfo.phone,
+        companySize: personalInfo.companySize || null,
+        designation: personalInfo.jobTitle || null,
+        alternateEmail: null,
+        // Also include industry data
+        industryType: selectedIndustry
+          ? {
+              _id: selectedIndustry._id,
+              name: selectedIndustry.name,
+              description: selectedIndustry.description,
+            }
+          : null,
+      };
+
+      console.log("Updating contact details with:", contactData);
+      await updatePortalStep(2, contactData, portalId);
+      console.log("Contact details updated successfully");
+    } catch (error) {
+      console.error("Failed to update contact details:", error);
+    }
+  };
+
   // Function to update personal information
   const updatePersonalInfo = (field, value) => {
     setPersonalInfo((prev) => ({
@@ -701,6 +735,22 @@ const DynamicContextState = ({ children }) => {
     personalInfo,
   ]);
 
+  // Auto-update contact details when personal info is complete and portal exists
+  useEffect(() => {
+    if (portalId && isPersonalInfoComplete() && currentStep >= 3) {
+      // Only update if we're on or past the Identity step
+      updateContactDetails();
+    }
+  }, [
+    portalId,
+    personalInfo.fullName,
+    personalInfo.email,
+    personalInfo.phone,
+    personalInfo.jobTitle,
+    personalInfo.companySize,
+    currentStep,
+  ]);
+
   // Fetch data on component mount
   useEffect(() => {
     fetchIndustries();
@@ -770,11 +820,16 @@ const DynamicContextState = ({ children }) => {
               customModules: null, // Not implemented yet
               integrations: null, // Not implemented yet
               additionalRequirements: null, // Not implemented yet
-              // Include all identity data for completeness
+              // Personal information - this is what gets saved to contactDetails
               name: personalInfo.fullName,
               email: personalInfo.email,
               mobile: personalInfo.phone,
+              designation: personalInfo.jobTitle || null,
+              // Company size - this gets saved to organizationType.companySize
+              companySize: personalInfo.companySize || null,
+              // Organization type
               organizationType: "company",
+              // Include all other personal info fields
               ...personalInfo,
               // Industry data (already saved in step 2)
               industryType: selectedIndustry
@@ -874,15 +929,14 @@ const DynamicContextState = ({ children }) => {
 
             case 2: // Select Industry (when moving from step 1 to 2)
               // API step 2: CONTACT_DETAILS - expects name, email, mobile, designation, alternateEmail
-              // This is where we save the personal information collected in the Identity step
+              // But we haven't collected personal info yet, so we'll send placeholder data
+              // Personal info will be sent in step 4 when the Identity form is completed
               stepData = {
-                // Contact details as expected by backend
+                // Placeholder contact details (will be updated in step 4)
                 name: personalInfo.fullName || "TBD",
                 email: personalInfo.email || "tbd@example.com",
                 mobile: personalInfo.phone || "0000000000",
-                // Additional contact fields
-                designation: personalInfo.jobTitle || null,
-                alternateEmail: null, // Not collected in current form
+
                 // Industry data that should be saved
                 industryType: selectedIndustry
                   ? {
@@ -895,7 +949,8 @@ const DynamicContextState = ({ children }) => {
               break;
 
             case 3: // Select Modules (when moving from step 2 to 3)
-              // API step 3: ORGANIZATION_TYPE - expects organizationType, organizationDetails, industryType, companySize
+              // API step 3: ORGANIZATION_TYPE - expects organizationType, organizationDetails, industryType
+              // Company size will be sent in step 4 when personal info is collected
               stepData = {
                 organizationType: "company", // Default to company type
                 // Organization details
@@ -908,8 +963,6 @@ const DynamicContextState = ({ children }) => {
                       }
                     : null,
                 },
-                // Company size from personal info
-                companySize: personalInfo.companySize || null,
                 // Industry type (already saved in step 2, but including for completeness)
                 industryType: selectedIndustry
                   ? {
@@ -922,6 +975,7 @@ const DynamicContextState = ({ children }) => {
 
             case 4: // Identity (when moving from step 3 to 4)
               // API step 4: MODULE_SELECTION - expects modules array
+              // This is where we send ALL the personal information collected in the Identity step
               stepData = {
                 // API expects modules array for step 4
                 modules: selectedModules,
@@ -929,11 +983,16 @@ const DynamicContextState = ({ children }) => {
                 customModules: null, // Not implemented yet
                 integrations: null, // Not implemented yet
                 additionalRequirements: null, // Not implemented yet
-                // Include all identity data for completeness
+                // Personal information - this is what gets saved to contactDetails
                 name: personalInfo.fullName,
                 email: personalInfo.email,
                 mobile: personalInfo.phone,
+                designation: personalInfo.jobTitle || null,
+                // Company size - this gets saved to organizationType.companySize
+                companySize: personalInfo.companySize || null,
+                // Organization type
                 organizationType: "company",
+                // Include all other personal info fields
                 ...personalInfo,
                 // Industry data (already saved in step 2)
                 industryType: selectedIndustry
@@ -1060,6 +1119,7 @@ const DynamicContextState = ({ children }) => {
         portalError,
         initializePortal,
         updatePortalStep,
+        updateContactDetails,
         // Identity
         identityData,
         setIdentityData,

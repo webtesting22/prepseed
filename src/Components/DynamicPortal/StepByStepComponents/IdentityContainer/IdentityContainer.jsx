@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import DynamicPortalContext from "../../CommonContext/DynamicPortalContext";
 
 const IdentityContainer = () => {
@@ -27,7 +27,36 @@ const IdentityContainer = () => {
     "500+ employees",
   ];
 
-  const { personalInfo, updatePersonalInfo } = useContext(DynamicPortalContext);
+  const { personalInfo, updatePersonalInfo, updateContactDetails } =
+    useContext(DynamicPortalContext);
+
+  // Function to handle form completion and update backend
+  const handleFormCompletion = async () => {
+    if (personalInfo.fullName && personalInfo.email) {
+      try {
+        await updateContactDetails();
+        console.log(
+          "Contact details updated successfully after form completion"
+        );
+      } catch (error) {
+        console.error("Failed to update contact details:", error);
+      }
+    }
+  };
+
+  // Auto-update contact details when required fields are filled
+  useEffect(() => {
+    if (personalInfo.fullName && personalInfo.email && personalInfo.phone) {
+      handleFormCompletion();
+    }
+  }, [
+    personalInfo.fullName,
+    personalInfo.email,
+    personalInfo.phone,
+    personalInfo.jobTitle,
+    personalInfo.companySize,
+  ]);
+
   return (
     <div style={{ padding: "24px" }}>
       <div style={{ marginBottom: "32px" }}>
