@@ -33,6 +33,14 @@ const DynamicContextState = ({ children }) => {
   const [logoUploadSuccess, setLogoUploadSuccess] = useState(false);
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState("");
 
+  // Session tracking state
+  const [sessionId, setSessionId] = useState(null);
+  const [deviceId, setDeviceId] = useState(null);
+  const [ipId, setIpId] = useState(null);
+  const [activityId, setActivityId] = useState(null);
+  const [sessionInitializing, setSessionInitializing] = useState(false);
+  const [sessionError, setSessionError] = useState("");
+
   const steps = [
     { id: 0, name: "Logo & Branding", component: "LogoUpload" },
     { id: 1, name: "Select Industry", component: "SelectIndustry" },
@@ -250,6 +258,98 @@ const DynamicContextState = ({ children }) => {
     return selectedColors.some((c) => c.hex === color.hex);
   };
 
+  // Function to initialize session tracking
+  const initializeSession = async (deviceInfo, referrer, utm) => {
+    try {
+      setSessionInitializing(true);
+      setSessionError("");
+
+      const response = await axios.post(
+        `${API_BASE_URL}/website/tracking/session/initialize`,
+        {
+          deviceInfo,
+          referrer,
+          utm,
+        }
+      );
+
+      if (response.data.success && response.data.data) {
+        const {
+          sessionId: newSessionId,
+          deviceId: newDeviceId,
+          ipId: newIpId,
+          activityId: newActivityId,
+        } = response.data.data;
+
+        // Store session data in localStorage with 24 hour expiry
+        const sessionData = {
+          ...response.data.data,
+          timestamp: Date.now(),
+          expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+        };
+        localStorage.setItem(
+          "sessionTrackingData",
+          JSON.stringify(sessionData)
+        );
+
+        setSessionId(newSessionId);
+        setDeviceId(newDeviceId);
+        setIpId(newIpId);
+        setActivityId(newActivityId);
+
+        return response.data.data;
+      } else {
+        throw new Error("Invalid API response format");
+      }
+    } catch (error) {
+      console.error("Error initializing session:", error);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to initialize session";
+      setSessionError(errorMessage);
+      throw error;
+    } finally {
+      setSessionInitializing(false);
+    }
+  };
+
+  // Function to check if session data exists and is valid
+  const getStoredSessionData = () => {
+    try {
+      const storedData = localStorage.getItem("sessionTrackingData");
+      if (!storedData) return null;
+
+      const sessionData = JSON.parse(storedData);
+      const now = Date.now();
+
+      // Check if data has expired
+      if (now > sessionData.expiresAt) {
+        localStorage.removeItem("sessionTrackingData");
+        return null;
+      }
+
+      return sessionData;
+    } catch (error) {
+      console.error("Error parsing stored session data:", error);
+      localStorage.removeItem("sessionTrackingData");
+      return null;
+    }
+  };
+
+  // Function to load session data from localStorage
+  const loadStoredSessionData = () => {
+    const sessionData = getStoredSessionData();
+    if (sessionData) {
+      setSessionId(sessionData.sessionId);
+      setDeviceId(sessionData.deviceId);
+      setIpId(sessionData.ipId);
+      setActivityId(sessionData.activityId);
+      return true;
+    }
+    return false;
+  };
+
   // Clear selected modules when industry changes
   useEffect(() => {
     if (selectedIndustry) {
@@ -262,6 +362,54 @@ const DynamicContextState = ({ children }) => {
   useEffect(() => {
     fetchIndustries();
     fetchModules();
+  }, []);
+
+  // Initialize session tracking on component mount
+  useEffect(() => {
+    const initializeSessionTracking = async () => {
+      try {
+        // Collect device information dynamically
+        const deviceInfo = {
+          screenWidth: window.screen.width,
+          screenHeight: window.screen.height,
+          viewportWidth: window.innerWidth,
+          viewportHeight: window.innerHeight,
+          colorDepth: window.screen.colorDepth,
+          pixelRatio: window.devicePixelRatio,
+          language: navigator.language,
+          platform: navigator.platform,
+          cookieEnabled: navigator.cookieEnabled,
+          onLine: navigator.onLine,
+          userAgent: navigator.userAgent,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        };
+
+        // Get referrer
+        const referrer = document.referrer || "";
+
+        // Extract UTM parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const utm = {
+          utm_source: urlParams.get("utm_source") || "",
+          utm_medium: urlParams.get("utm_medium") || "",
+          utm_campaign: urlParams.get("utm_campaign") || "",
+          utm_term: urlParams.get("utm_term") || "",
+          utm_content: urlParams.get("utm_content") || "",
+        };
+
+        // Load session data from localStorage
+        if (loadStoredSessionData()) {
+          console.log("Session data loaded from localStorage.");
+        } else {
+          // Initialize session if no data is found
+          await initializeSession(deviceInfo, referrer, utm);
+        }
+      } catch (error) {
+        console.error("Failed to initialize session tracking:", error);
+      }
+    };
+
+    initializeSessionTracking();
   }, []);
 
   const nextStep = () => {
@@ -330,6 +478,16 @@ const DynamicContextState = ({ children }) => {
         removeLogo,
         handleColorSelect,
         isColorSelected,
+        // Session tracking
+        sessionId,
+        deviceId,
+        ipId,
+        activityId,
+        sessionInitializing,
+        sessionError,
+        initializeSession,
+        getStoredSessionData,
+        loadStoredSessionData,
       }}
     >
       {children}
